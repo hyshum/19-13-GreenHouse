@@ -31,12 +31,12 @@ void loop() {
   Serial.print("Humidity = ");
   Serial.println(DHT.humidity);
   
-  if ( photoCellReading > 200 )
+  if ( temp > 80 )
   {
     Serial.println("high");
     digitalWrite( in1, LOW );
   }
-  else if ( photoCellReading <= 200)
+  else if ( temp <= 200)
   {
     Serial.println("low");
     digitalWrite(in1,HIGH);
