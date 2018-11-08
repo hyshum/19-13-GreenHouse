@@ -3,6 +3,7 @@
 dht DHT;
 #define DHT11_PIN 4
 #define LIGHT_PIN 0
+#define OUTSIDE_TEMP_PIN 1
 
 int in1 = 7;
 void setup() {
@@ -11,6 +12,11 @@ void setup() {
   Serial.begin(9600);
 }
 void loop() {
+  int out_reading = analogRead( OUTSIDE_TEMP_PIN );
+  float voltage = out_reading * 5;
+  voltage /= 1024.0;
+
+  float tempOutF = (voltage - 0.5) * 100 * 9.0/5.0 + 32;
   int chk = DHT.read11(DHT11_PIN);
   double temp = DHT.temperature * 1.8 + 32;
   double humidity = DHT.humidity;
@@ -20,6 +26,8 @@ void loop() {
   Serial.println( photoCellReading );
   Serial.print("Temp = " );
   Serial.println( temp );
+  Serial.print( "Temp outside = " );
+  Serial.println( tempOutF );
   Serial.print("Humidity = ");
   Serial.println(DHT.humidity);
   
