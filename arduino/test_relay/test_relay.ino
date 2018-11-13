@@ -33,12 +33,12 @@ void loop() {
   
   if ( temp > 80 )
   {
-    Serial.println("high");
+    //if temperature is above 80, turn relay on and turn LED on
     digitalWrite( in1, LOW );
   }
-  else if ( temp <= 200)
+  else if ( temp <= 80)
   {
-    Serial.println("low");
+    //if temperature is below LED, turn off relay and turn LED off
     digitalWrite(in1,HIGH);
   }
 
