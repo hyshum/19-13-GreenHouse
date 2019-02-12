@@ -20,6 +20,8 @@ dht DHT;
 #define DHT11_PIN D1 //Nodemcu: D1, Arduino: 4
 #define LIGHT_PIN D3  //Nodemcu: D2, Arduino: 0
 #define OUTSIDE_TEMP_PIN A0  //Nodemcu: D5, Arduino: 1
+#define RW_PIN D0
+#define LED_PIN D1
 //#define Soil_moisture_PIN A0  //Nodemcu: D7, Arduino: 1
 int in1 = D6;  //Nodemcu: D6, Arduino: 7
 
@@ -122,9 +124,10 @@ void handleSave() {
 
 void setup() {
 
-  pinMode(in1, OUTPUT);
-  //digitalWrite(in1, LOW);
-
+  pinMode(RW_PIN, OUTPUT);
+  digitalWrite(RW_PIN, LOW);
+  pinMode( LED_PIN, OUTPUT );
+  digitalWrite( LED_PIN, LOW );
   // Start serial
   Serial.begin(115200);
   //delay(10);
@@ -157,14 +160,47 @@ void setup() {
 }
 int incomingByte;      // a variable to read incoming serial data into
 String incomingString;
-
+bool changeTemp = 0;
 void loop() {
 
-    if (Serial.available() > 0) {
-    // read the oldest byte in the serial buffer:
-    incomingString = Serial.readString();
-    Serial.println( incomingString );
+
+    if( changeTemp == 1 )
+    {
+      digitalWrite( RW_PIN, HIGH );
+      delay( 5000 );
+      Serial.print( "hello" );
+      digitalWrite( LED_PIN, LOW );
+      changeTemp = 0;
+      delay( 5000 );
     }
+    else
+    {
+      digitalWrite( RW_PIN, LOW );
+
+      delay( 5000 );
+      while( true )
+      {
+        if (Serial.available() > 0) {
+        
+          // read the oldest byte in the serial buffer:
+          incomingString = Serial.readString();
+          if( incomingString == "arduino" )
+          {
+            Serial.println( "woohoo!" );
+            digitalWrite( LED_PIN, HIGH );
+            changeTemp = 1; 
+            break;
+          }
+  
+        }
+      }
+    }
+      
+      //delay( 5000 );
+      /*
+      changeTemp = 1;
+    }
+    //changeTemp = ~changeTemp;
    /*
   server.handleClient();
   Serial.print("The current threshold temperature is ");
