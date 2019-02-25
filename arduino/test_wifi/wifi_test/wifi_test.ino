@@ -58,7 +58,7 @@ void loop()
     if (client.connect(server, 80)) //   "184.106.153.149" or api.thingspeak.com
     {
 
-        String postStr = apiKey;
+        String postStr  = apiKey;
         postStr += "&field1=";
         postStr += String(t);   //Temperature
         postStr += "&field2=";

@@ -6,8 +6,8 @@ dht DHT;
 #define READ_PIN 10
 #define WRITE_PIN 11
 #define LED_PIN 7
+#define RELAY_PIN 6
 //#define Soil_moisture_PIN A0  //Nodemcu: D7, Arduino: 1
-int in1 = 6;  //Nodemcu: D6, Arduino: 7
 
 
 int out_reading;
@@ -102,7 +102,7 @@ void loop() {
     if ( temp > threshold_temperature )
     {
       //if temperature is above threshold temperature, turn relay off and turn LED off
-      digitalWrite(in1, HIGH );
+      digitalWrite(RELAY_PIN, HIGH );
   
       Warning_temperture_low = 0;
        
@@ -125,7 +125,7 @@ void loop() {
       
       heaterindex = 1;
       FinishTime = millis();
-      digitalWrite(in1,LOW);   
+      digitalWrite(RELAY_PIN,LOW);   
     }
 
     bool check = digitalRead( READ_PIN );
