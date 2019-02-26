@@ -63,7 +63,7 @@ int Warning_temperture_low = 0;
 
 String apiKey = "A7OVYSO7FWW8XYSC"; //  Enter your Write API key from ThingSpeak
 const char *thingspeakserver = "api.thingspeak.com";
-WiFiClient client;
+WiFiClient client_1;
 
 int sensorValue = 0;  
 int percent = 0;
@@ -224,8 +224,8 @@ void setup() {
   server.on ( "/", handleRoot );
   server.on ("/save", handleSave);
   server.begin();
-  
-      int res = client.connect();
+
+    int res = client.connect();
     Serial.printf("mqtt connect=%d\n", res);
 
     if (res == 0) {
@@ -233,8 +233,7 @@ void setup() {
         [](const char* topic, const char* msg)
         { Serial.printf("Got msg '%s' on topic %s\n", msg, topic); }
       );
-    }
-
+    }  
 
 }
 
@@ -322,7 +321,7 @@ void loop() {
   //Serial.println(threshold_temperature);
   //Serial.println("");
   
-      if (client.connect(thingspeakserver, 80)) //   "184.106.153.149" or api.thingspeak.com
+      if (client_1.connect(thingspeakserver, 80)) //   "184.106.153.149" or api.thingspeak.com
       {
   
           String postStr = apiKey;
@@ -334,17 +333,17 @@ void loop() {
           postStr += String(tempOutF);   //Humidity
           postStr += "\r\n\r\n";
   
-          client.print("POST /update HTTP/1.1\n");
-          client.print("Host: api.thingspeak.com\n");
-          client.print("Connection: close\n");
-          client.print("X-THINGSPEAKAPIKEY: " + apiKey + "\n");
-          client.print("Content-Type: application/x-www-form-urlencoded\n");
-          client.print("Content-Length: ");
-          client.print(postStr.length());
-          client.print("\n\n");
-          client.print(postStr);
+          client_1.print("POST /update HTTP/1.1\n");
+          client_1.print("Host: api.thingspeak.com\n");
+          client_1.print("Connection: close\n");
+          client_1.print("X-THINGSPEAKAPIKEY: " + apiKey + "\n");
+          client_1.print("Content-Type: application/x-www-form-urlencoded\n");
+          client_1.print("Content-Length: ");
+          client_1.print(postStr.length());
+          client_1.print("\n\n");
+          client_1.print(postStr);
       }
-      client.stop();
+      client_1.stop();
 
     //sensorValue = analogRead(Soil_moisture_PIN);
     //percent = convertToPercent(sensorValue);
@@ -354,4 +353,28 @@ void loop() {
 
       delay(5000);
     }
+
+      if (client.isConnected()) {
+    DynamicJsonDocument jsonBuffer;
+    JsonObject root = jsonBuffer.to<JsonObject>();
+    JsonObject state = root.createNestedObject("state");
+    JsonObject state_reported = state.createNestedObject("reported");
+    state_reported["time"] = random(100);
+    state_reported["Temperature_inside"] = random(100);
+    state_reported["Temperature_outside"] = random(100);
+    state_reported["Humidity"] = random(100);
+    state_reported["Soil Moisture"] = random(100);
+    serializeJson(root, Serial);
+    Serial.println();
+    char shadow[measureJson(root) + 1];
+    serializeJson(root, shadow, sizeof(shadow));
+
+    client.publish(aws_topic, shadow, 0, false);
+    client.yield();
+
+  } else {
+    Serial.println("Not connected...");
+    delay(2000);
+  }
+  delay(10000);
 }
