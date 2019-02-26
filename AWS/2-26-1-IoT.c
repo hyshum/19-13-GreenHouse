@@ -9,7 +9,7 @@
 //https://github.com/Links2004/arduinoWebSockets
 
 //https://projects.eclipse.org/projects/technology.paho/downloads
-(download Arduino version)
+//(download Arduino version)
 
 const char *ssid = "Volcano";
 const char *password = "Cannonball";
@@ -22,11 +22,6 @@ int mqttPort = 443;
 char *iamKeyId = (char *) "AKIAIRZPHHK6PN47GWGQ";
 char *iamSecretKey = (char *) "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";
 const char* aws_topic  = "$aws/things/Greenhouse_project/shadow/update";
-
-//#if !(ARDUINOJSON_VERSION_MAJOR == 6 and ARDUINOJSON_VERSION_MINOR == 5)
- // #error "Install ArduinoJson v6.5.0-beta"
-//#endif
-
 ESP8266DateTimeProvider dtp;
 AwsIotSigv4 sigv4(&dtp, region, endpoint, mqttHost, mqttPort,
 iamKeyId, iamSecretKey);
