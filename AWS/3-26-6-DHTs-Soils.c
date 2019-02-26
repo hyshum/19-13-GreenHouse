@@ -8,16 +8,16 @@
 //https://github.com/debsahu/esp8266-arduino-aws-iot-ws
 #include <dht.h>
 dht DHT_inside_D1_GPIO5;
-dht DHT_inside_D4_GPIO2;
+dht DHT_outside_D4_GPIO2;
 #define DHT_inside_D1_GPIO5_Pin 5
-#define DHT_inside_D1_GPIO2_Pin 2
+#define DHT_outside_D4_GPIO2_Pin 2
 //https://github.com/Links2004/arduinoWebSockets
 
 //https://projects.eclipse.org/projects/technology.paho/downloads
 //(download Arduino version)
 
-const char *ssid = "Volcano";
-const char *password = "Cannonball";
+const char *ssid = "Lyndon";
+const char *password = "987654321";
 
 // See `src/aws_iot_config.h` for formatting
 char *region = (char *) "us-east-1";
@@ -59,23 +59,24 @@ void setup() {
 }
 
 void loop() {
-  int chk_DHT_inside_D1_GPIO5_Pin = DHT_inside_D1_GPIO5.read11(DHT_inside_D1_GPIO5_Pin);
-  int tem_DHT_inside_D1_GPIO5_Pin = DHT_inside_D1_GPIO5.temperature
-  int hum_DHT_inside_D1_GPIO5_Pin = DHT_inside_D1_GPIO5.humidity
-  Serial.print("Temperature = ");
-  Serial.println(tem);
-  Serial.print("Humidity = ");
-  Serial.println(hum);
+  int chk_DHT_inside_D1_GPIO5 = DHT_inside_D1_GPIO5.read11(DHT_inside_D1_GPIO5_Pin);
+  int tem_DHT_inside_D1_GPIO5 = DHT_inside_D1_GPIO5.temperature;
+  int hum_DHT_inside_D1_GPIO5 = DHT_inside_D1_GPIO5.humidity;
+  int chk_DHT_outside_D4_GPIO2 = DHT_outside_D4_GPIO2.read11(DHT_outside_D4_GPIO2_Pin);
+  int tem_DHT_outside_D4_GPIO2 = DHT_outside_D4_GPIO2.temperature;
+  int hum_DHT_outside_D4_GPIO2 = DHT_outside_D4_GPIO2.humidity;
   if (client.isConnected()) {
     DynamicJsonDocument jsonBuffer;
     JsonObject root = jsonBuffer.to<JsonObject>();
     JsonObject state = root.createNestedObject("state");
     JsonObject state_reported = state.createNestedObject("reported");
     state_reported["time"] = 0;
-    state_reported["Temperature_inside"] = tem_DHT_inside_D1_GPIO5_Pin;
-    state_reported["Temperature_outside"] = 0;
-    state_reported["Humidity_inside"] = hum_DHT_inside_D1_GPIO5_Pin;
-    state_reported["Soil Moisture"] = 0;
+    state_reported["Temperature_inside"] = tem_DHT_inside_D1_GPIO5;
+    state_reported["Temperature_outside"] = tem_DHT_outside_D4_GPIO2;
+    state_reported["Humidity_inside"] = hum_DHT_inside_D1_GPIO5;
+    state_reported["Humidity_outside"] = hum_DHT_outside_D4_GPIO2;
+    state_reported["Soil Moisture_inside"] = 0;
+    state_reported["Soil Moisture_outside"] = 0;
     serializeJson(root, Serial);
     Serial.println();
     char shadow[measureJson(root) + 1];
