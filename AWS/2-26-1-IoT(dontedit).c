@@ -28,7 +28,7 @@ iamKeyId, iamSecretKey);
 AWSConnectionParams cp(sigv4);
 AWSWebSocketClientAdapter adapter(cp);
 AWSMqttClient client(adapter, cp);
-
+int count = 0;
 void setup() {
 
     Serial.begin(115200);
@@ -59,7 +59,7 @@ void loop() {
     JsonObject root = jsonBuffer.to<JsonObject>();
     JsonObject state = root.createNestedObject("state");
     JsonObject state_reported = state.createNestedObject("reported");
-    state_reported["time"] = random(100);
+    state_reported["time"] = count;
     state_reported["Temperature_inside"] = random(100);
     state_reported["Temperature_outside"] = random(100);
     state_reported["Humidity"] = random(100);
@@ -76,6 +76,6 @@ void loop() {
     Serial.println("Not connected...");
     delay(2000);
   }
-
+count = count + 1;
   delay(20000);
 }

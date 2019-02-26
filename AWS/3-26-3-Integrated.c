@@ -6,12 +6,11 @@
 
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
-//https://github.com/bblanchon/ArduinoJson (use v6.xx)
 #include <ESP8266AWSIoTMQTTWS.h>
 
 // WiFi network
-const char* ssid     = "HotspotSM8";
-const char* password = "ygia3939";
+const char* ssid     = "Lyndon";
+const char* password = "987654321";
 
 ESP8266WebServer server ( 80 );
 int threshold_temperature = 80;
@@ -69,57 +68,6 @@ int sensorValue = 0;
 int percent = 0;
 String percentString ="0";
 int stringLength = 0;
-/*void read_sensors() {
-   out_reading = analogRead( OUTSIDE_TEMP_PIN );
-   voltage = out_reading * 3.3;
-    voltage /= 1024.0;
-   tempOutF = (voltage - 0.5) * 100 * 9.0/5.0 + 29;
-   chk = DHT.read11(DHT11_PIN);
-   temp = DHT.temperature * 1.8 + 32;
-   humidity = DHT.humidity;
-   photoCellReading = analogRead( LIGHT_PIN );
-  //Serial.print("light reading: " );
-  //Serial.println( photoCellReading );
-  //Serial.print("Temp = " );
-  //Serial.println( temp );
-  //Serial.print( "Temp outside = " );
-  //Serial.println( tempOutF );
-  //Serial.print("Humidity = ");
-  //Serial.println(DHT.humidity);
-  
-  if ( temp > threshold_temperature )
-  {
-    //if temperature is above threshold temperature, turn relay off and turn LED off
-    digitalWrite(in1, HIGH );
-    Warning_temperture_low = 0;
-     
-    if (heaterindex == 1) 
-    {
-      RunningTime = FinishTime - StartTime;
-      TotalRunningTime += RunningTime;
-      heaterindex = 0;
-    }
-    StartTime = millis();
-    
-  }
-  else if ( temp <= threshold_temperature)
-  {
-    //if temperature is below threshold temperature, turn on relay and turn LED on
-    
-    if (temp + 20 < threshold_temperature)
-        Warning_temperture_low = 1;
-    else  
-        Warning_temperture_low = 0;
-    
-    heaterindex = 1;
-    FinishTime = millis();
-    digitalWrite(in1,LOW);
-    
-  }
- // Serial.println(TotalRunningTime);
-  
-}
-*/
 String incomingString;
 
 
@@ -317,10 +265,7 @@ void loop() {
     { 
       digitalWrite( LED_PIN, LOW );
       server.handleClient();
-  //Serial.print("The current threshold temperature is ");
-  //Serial.println(threshold_temperature);
-  //Serial.println("");
-  
+
       if (client_1.connect(thingspeakserver, 80)) //   "184.106.153.149" or api.thingspeak.com
       {
   
@@ -345,11 +290,7 @@ void loop() {
       }
       client_1.stop();
 
-    //sensorValue = analogRead(Soil_moisture_PIN);
-    //percent = convertToPercent(sensorValue);
-    //percentString = String(percent);
-    //Serial.println( "sensor val" + sensorValue );
-    //Serial.println( "percent: " + percentString );
+
 
       delay(5000);
     }
