@@ -12,7 +12,7 @@ dht DHT_outside_D4_GPIO2;
 #define DHT_inside_D1_GPIO5_Pin 5
 #define DHT_outside_D4_GPIO2_Pin 2
 
-#define sensorPin = 0
+#define sensorPin  A0
 
 int Soil_inside = 0;  // variable to store the value coming from sensor A
 int Soil_outside = 0;  // variable to store the value coming from sensor B
