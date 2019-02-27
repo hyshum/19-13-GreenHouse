@@ -68,8 +68,6 @@ void loop() {
   int chk_DHT_outside_D4_GPIO2 = DHT_outside_D4_GPIO2.read11(DHT_outside_D4_GPIO2_Pin);
   int tem_DHT_outside_D4_GPIO2 = DHT_outside_D4_GPIO2.temperature;
   int hum_DHT_outside_D4_GPIO2 = DHT_outside_D4_GPIO2.humidity;
-  int Soilmositure_inside = digitalRead(Soilmositure_inside_D5_GPIO14_Pin);
-  int Soilmositure_outside = digitalRead(Soilmositure_outside_D6_GPIO12_Pin);
   if (client.isConnected()) {
     DynamicJsonDocument jsonBuffer;
     JsonObject root = jsonBuffer.to<JsonObject>();
@@ -80,8 +78,8 @@ void loop() {
     state_reported["Temperature_outside"] = tem_DHT_outside_D4_GPIO2;
     state_reported["Humidity_inside"] = hum_DHT_inside_D1_GPIO5;
     state_reported["Humidity_outside"] = hum_DHT_outside_D4_GPIO2;
-    state_reported["Soil Moisture_inside"] = Soilmositure_inside;
-    state_reported["Soil Moisture_outside"] = Soilmositure_outside;
+    state_reported["Soil Moisture_inside"] = 0;
+    state_reported["Soil Moisture_outside"] = 0;
     serializeJson(root, Serial);
     Serial.println();
     char shadow[measureJson(root) + 1];
