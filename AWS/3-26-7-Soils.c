@@ -1,4 +1,3 @@
-
 //https://www.youtube.com/watch?v=AiCa6E_DBL8
 
 #include <ESP8266WiFi.h>
@@ -12,7 +11,7 @@ dht DHT_outside_D4_GPIO2;
 #define DHT_inside_D1_GPIO5_Pin 5
 #define DHT_outside_D4_GPIO2_Pin 2
 
-#define sensorPin = 0
+#define sensorPin A0
 int Soil_inside_D5_GPIO14_enable = 14;      
 int Soil_outside_D6_GPIO12_enable = 12;  
 
@@ -76,18 +75,23 @@ void loop() {
   int tem_DHT_outside_D4_GPIO2 = DHT_outside_D4_GPIO2.temperature;
   int hum_DHT_outside_D4_GPIO2 = DHT_outside_D4_GPIO2.humidity;
   digitalWrite(Soil_inside_D5_GPIO14_enable, HIGH); 
+  delay(1500);
   Soil_inside = analogRead(sensorPin);
+  delay(1500);
   digitalWrite(Soil_inside_D5_GPIO14_enable, LOW);
-  delay(100);
+  delay(1500);
   digitalWrite(Soil_outside_D6_GPIO12_enable, HIGH); 
+  delay(1500);
   Soil_outside = analogRead(sensorPin);
+  delay(1500);
   digitalWrite(Soil_outside_D6_GPIO12_enable, LOW);
+  delay(1500);
   if (client.isConnected()) {
     DynamicJsonDocument jsonBuffer;
     JsonObject root = jsonBuffer.to<JsonObject>();
     JsonObject state = root.createNestedObject("state");
     JsonObject state_reported = state.createNestedObject("reported");
-    state_reported["time"] = 0;
+    state_reported["time"] = count;
     state_reported["Temperature_inside"] = tem_DHT_inside_D1_GPIO5;
     state_reported["Temperature_outside"] = tem_DHT_outside_D4_GPIO2;
     state_reported["Humidity_inside"] = hum_DHT_inside_D1_GPIO5;
@@ -107,8 +111,6 @@ void loop() {
     delay(2000);
   }
 count = count + 1;
-  delay(20000);
+  delay(500);
 }
-
-
 
