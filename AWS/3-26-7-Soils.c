@@ -17,7 +17,7 @@ int Soil_2_D6_GPIO12_enable = 12;
 
 int Soil_1 = 0;  // variable to store the value coming from sensor A
 int Soil_2 = 0;  // variable to store the value coming from sensor B
-
+int Convertingtopercentage(int soilmoisture);
 //https://github.com/Links2004/arduinoWebSockets
 
 //https://projects.eclipse.org/projects/technology.paho/downloads
@@ -96,8 +96,8 @@ void loop() {
     state_reported["Temperature_outside"] = tem_DHT_outside_D4_GPIO2;
     state_reported["Humidity_inside"] = hum_DHT_inside_D1_GPIO5;
     state_reported["Humidity_outside"] = hum_DHT_outside_D4_GPIO2;
-    state_reported["Soil Moisture 1"] = -0.51*Soil_1 + 235;
-    state_reported["Soil Moisture 2"] = -0.51*Soil_2 + 235;
+    state_reported["Soil Moisture 1"] = Convertingtopercentage(Soil_1);
+    state_reported["Soil Moisture 2"] = Convertingtopercentage(Soil_2);
     serializeJson(root, Serial);
     Serial.println();
     char shadow[measureJson(root) + 1];
@@ -114,3 +114,15 @@ count = count + 1;
   delay(500);
 }
 
+
+int Convertingtopercentage(int soilmoisture) {
+  int output;
+  output = -0.51*soilmoisture + 235;
+  if (output >= 100) {
+    output = 100;
+  }
+  if (output <= 0) {
+    output = 0;
+  }
+  return output;
+}
