@@ -12,11 +12,11 @@ dht DHT_outside_D4_GPIO2;
 #define DHT_outside_D4_GPIO2_Pin 2
 
 #define sensorPin A0
-int Soil_inside_D5_GPIO14_enable = 14;      
-int Soil_outside_D6_GPIO12_enable = 12;  
+int Soil_1_D5_GPIO14_enable = 14;      
+int Soil_2_D6_GPIO12_enable = 12;  
 
-int Soil_inside = 0;  // variable to store the value coming from sensor A
-int Soil_outside = 0;  // variable to store the value coming from sensor B
+int Soil_1 = 0;  // variable to store the value coming from sensor A
+int Soil_2 = 0;  // variable to store the value coming from sensor B
 
 //https://github.com/Links2004/arduinoWebSockets
 
@@ -74,17 +74,17 @@ void loop() {
   int chk_DHT_outside_D4_GPIO2 = DHT_outside_D4_GPIO2.read11(DHT_outside_D4_GPIO2_Pin);
   int tem_DHT_outside_D4_GPIO2 = DHT_outside_D4_GPIO2.temperature;
   int hum_DHT_outside_D4_GPIO2 = DHT_outside_D4_GPIO2.humidity;
-  digitalWrite(Soil_inside_D5_GPIO14_enable, HIGH); 
+  digitalWrite(Soil_1_D5_GPIO14_enable, HIGH); 
   delay(1500);
-  Soil_inside = analogRead(sensorPin);
+  Soil_1 = analogRead(sensorPin);
   delay(1500);
-  digitalWrite(Soil_inside_D5_GPIO14_enable, LOW);
+  digitalWrite(Soil_1_D5_GPIO14_enable, LOW);
   delay(1500);
-  digitalWrite(Soil_outside_D6_GPIO12_enable, HIGH); 
+  digitalWrite(Soil_2_D6_GPIO12_enable, HIGH); 
   delay(1500);
-  Soil_outside = analogRead(sensorPin);
+  Soil_2 = analogRead(sensorPin);
   delay(1500);
-  digitalWrite(Soil_outside_D6_GPIO12_enable, LOW);
+  digitalWrite(Soil_2_D6_GPIO12_enable, LOW);
   delay(1500);
   if (client.isConnected()) {
     DynamicJsonDocument jsonBuffer;
@@ -96,8 +96,8 @@ void loop() {
     state_reported["Temperature_outside"] = tem_DHT_outside_D4_GPIO2;
     state_reported["Humidity_inside"] = hum_DHT_inside_D1_GPIO5;
     state_reported["Humidity_outside"] = hum_DHT_outside_D4_GPIO2;
-    state_reported["Soil Moisture_inside"] = Soil_inside;
-    state_reported["Soil Moisture_outside"] = Soil_outside;
+    state_reported["Soil Moisture 1"] = Soil_1;
+    state_reported["Soil Moisture 2"] = Soil_2;
     serializeJson(root, Serial);
     Serial.println();
     char shadow[measureJson(root) + 1];
