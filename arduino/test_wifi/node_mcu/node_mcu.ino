@@ -31,13 +31,14 @@ dht DHT;
 //#define Soil_moisture_PIN A0  //Nodemcu: D7, Arduino: 1
 int in1 = D6;  //Nodemcu: D6, Arduino: 7
 
-float tempOutF;
+double tempOutF;
 double temp;
 double humidity;
+int soilMoisture;
 int on;
 int photoCellReading;
 bool changeTemp = false;
-
+int soilCorrected;
 unsigned long StartTime;
 unsigned long FinishTime;
 unsigned long RunningTime;
@@ -52,60 +53,6 @@ int sensorValue = 0;
 int percent = 0;
 String percentString ="0";
 int stringLength = 0;
-/*void read_sensors() {
-   out_reading = analogRead( OUTSIDE_TEMP_PIN );
-   voltage = out_reading * 3.3;
-    voltage /= 1024.0;
-
-   tempOutF = (voltage - 0.5) * 100 * 9.0/5.0 + 29;
-   chk = DHT.read11(DHT11_PIN);
-   temp = DHT.temperature * 1.8 + 32;
-   humidity = DHT.humidity;
-   photoCellReading = analogRead( LIGHT_PIN );
-  //Serial.print("light reading: " );
-  //Serial.println( photoCellReading );
-  //Serial.print("Temp = " );
-  //Serial.println( temp );
-  //Serial.print( "Temp outside = " );
-  //Serial.println( tempOutF );
-  //Serial.print("Humidity = ");
-  //Serial.println(DHT.humidity);
-  
-  if ( temp > threshold_temperature )
-  {
-    //if temperature is above threshold temperature, turn relay off and turn LED off
-    digitalWrite(in1, HIGH );
-
-    Warning_temperture_low = 0;
-     
-    if (heaterindex == 1) 
-    {
-      RunningTime = FinishTime - StartTime;
-      TotalRunningTime += RunningTime;
-      heaterindex = 0;
-    }
-    StartTime = millis();
-    
-  }
-  else if ( temp <= threshold_temperature)
-  {
-    //if temperature is below threshold temperature, turn on relay and turn LED on
-    
-
-    if (temp + 20 < threshold_temperature)
-        Warning_temperture_low = 1;
-    else  
-        Warning_temperture_low = 0;
-    
-    heaterindex = 1;
-    FinishTime = millis();
-    digitalWrite(in1,LOW);
-    
-  }
- // Serial.println(TotalRunningTime);
-  
-}
-*/
 
 WiFiClientSecure net;
 
@@ -120,7 +67,6 @@ time_t nowish = 1510592825;
 
 void NTPConnect(void)
 {
-    //Serial.print("Setting time using SNTP");
     configTime( TIME_ZONE * 3600, DST * 3600, "pool.ntp.org", "time.nist.gov" );
     now = time( nullptr );
     while( now < nowish )
@@ -132,8 +78,6 @@ void NTPConnect(void)
     //Serial.println( "done!" );
     struct tm timeinfo;
     gmtime_r( &now, &timeinfo );
-    //Serial.print( "Current time: " );
-    //Serial.print( asctime(&timeinfo ) );
 }
 
 void messageReceived(String &topic, String &payload)
@@ -258,18 +202,18 @@ void checkWiFiThenReboot(void)
   ESP.restart();
 }
 
+
 void sendData(void)
 {
   DynamicJsonDocument jsonBuffer(1024);
   JsonObject root = jsonBuffer.to<JsonObject>();
   JsonObject state = root.createNestedObject("state");
   JsonObject state_reported = state.createNestedObject("reported");
-  state_reported["value"] = random(100);
   state_reported["tmpi"] = temp;
   state_reported["tmpo"] = tempOutF;
   state_reported["mdy"] = humidity;
-  state_reported["sm1"] = random(100);  
-  //serializeJson(root, Serial);
+  state_reported["lt"] = photoCellReading;
+  state_reported["sm1"] = soilCorrected;  
   char shadow[measureJson(root) + 1];
   serializeJson(root, shadow, sizeof(shadow));
   if (!client.publish(MQTT_PUB_TOPIC, shadow, false, 0))
@@ -279,87 +223,6 @@ void sendData(void)
 
 String incomingString;
 
-
-int convertToPercent(int value)
-{
-  int percentValue = 0;
-  percentValue = map(value, 1023, 220, 0, 100);
-  if(percentValue > 100)
-    percentValue = 100;
-  return percentValue;
-}
-void handleRoot() {
-  String html = "<!DOCTYPE html>";
-  html += "<html lang=\"en\">";
-  html += "<head> <meta charset=\"utf-8\"> <meta http-equiv=\"refresh\" content=\"10\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> </head>";
-  html += "<body>";
-  html += "<h1>Sensor Data</h1>";
-  if (Warning_temperture_low) {
-    html += "<p>Warning: temperature is too low</p>";
-  }
-  if (humidity>90) {
-    html += "<p>Warning: humidity is too high</p>";
-  }
-  if (humidity<30) {
-    html += "<p>Warning: humidity is too low</p>";
-  }
-  /*if( percent <10)
-  {
-    html += "<p>Warning: soil moisture is too low</p>";
-  }*/
-  html += "<p>Temperature: </p>";
-  html += temp;
-  html += "<br><br>";
-  html += "<p>Humidity: </p>";
-  html += humidity;
-  html += "<br><br>";
-  html += "<p>Temperature outside</p>";
-  html += tempOutF;
-  //html += "<p>Soil Mositure: </p>";
-  //html += percentString;
-  html += "<br><br>";
-  html += "<p>Light: </p>";
-  html += String(photoCellReading);
-  html += "<br><br>";
-  html += "<h1>Input the threshold temperature</h1>";
-  html += "<input type='text' name='date_hh' id='date_hh' size=2 autofocus> Degree";
-  html += "<div> <br><button id=\"save_button\">Submit</button></div>";
-  html += "<br>";
-  html += "<p>Heater running time(s): </p>";
-  html += TotalRunningTime / 1000;
-  html += "<br><br>";
-  //html += "<div> <br><button onclick="document.getElementById('date_hh').value = ''" id=\"save_button\">Submit</button></div>";
-  html += "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js\"></script>"; 
-  html += "<script>";
-  html += "var hh;";
-  html += "var mm;";
-  html += "var ss;";
-  html += "$('#save_button').click(function(e){";
-  html += "e.preventDefault();";
-  html += "hh = $('#date_hh').val();";
-  html += "mm = $('#date_mm').val();";
-  html += "ss = $('#date_ss').val();";        
-  html += "$.get('/save?hh=' + hh + '&mm=' + mm + '&ss=' + ss, function(data){";
-  html += "console.log(data);";
-  html += "});";
-  html += "})";     
-  html += "</script>";
-  html += "</body>";
-  html += "</html>";
-
-
-  //server.send ( 200, "text/html", html );  
-
-}
-
-/*
-void handleSave() {
-  if (server.arg("hh")!= ""){
-    threshold_temperature = server.arg("hh").toInt();
-    changeTemp = true;
-  }
-}
-*/
 
 void setup() {
 
@@ -389,7 +252,7 @@ void setup() {
   delay( 500 );
   }
 
-String sensorArray[5];
+String sensorArray[6];
 
 void parseString( String input )
 {
@@ -413,6 +276,16 @@ void parseString( String input )
  tempOutF = atof( sensorArray[1].c_str() );
  photoCellReading = atof( sensorArray[2].c_str() );
  humidity = atof( sensorArray[3].c_str() ); 
+ soilMoisture = atof( sensorArray[4].c_str() );
+ soilCorrected = -.51*soilMoisture + 235; 
+ if( soilCorrected > 100 )
+ {
+   soilCorrected = 100;
+ }
+ else if( soilCorrected < 0 )
+ {
+  soilCorrected = 0;
+ }
 }
 
 bool read_val = false;

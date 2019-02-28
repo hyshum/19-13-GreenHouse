@@ -1,23 +1,25 @@
 #include <dht.h>
-dht DHT;
+dht DHTIN;
+dht DHTOUT;
 #define DHT11_PIN 4 //Nodemcu: D1, Arduino: 4
 #define LIGHT_PIN 3  //Nodemcu: D2, Arduino: 0
-#define OUTSIDE_TEMP_PIN 5  //Nodemcu: D5, Arduino: 1
+#define DHT11_OUT 8  //Nodemcu: D5, Arduino: 1
 #define READ_PIN 10
 #define WRITE_PIN 11
 #define LED_PIN 7
 #define RELAY_PIN 6
+#define SOIL_PIN1 5
 //#define Soil_moisture_PIN A0  //Nodemcu: D7, Arduino: 1
 
 
-int out_reading;
-float voltage;
-float tempOutF;
+double tempOutF;
 int chk;
+int chkOut;
 double temp;
 double humidity;
 int on;
 int photoCellReading;
+int soilMoisture;
 
 unsigned long StartTime;
 unsigned long FinishTime;
@@ -91,15 +93,14 @@ void loop() {
     digitalWrite( LED_PIN, LOW );
     delay( 5000 );
     toSend = "";
-    out_reading = analogRead( OUTSIDE_TEMP_PIN );
-    voltage = out_reading * 3.3;
-    voltage /= 1024.0;
   
-    tempOutF = ( voltage - 0.5 ) * 100 * 9.0/5.0;
-    chk = DHT.read11( DHT11_PIN );
-    temp = DHT.temperature * 1.8;
-    humidity = DHT.humidity;
+    chkOut = DHTOUT.read11( DHT11_OUT );
+    tempOutF = DHTOUT.temperature * 1.8 + 32;
+    chk = DHTIN.read11( DHT11_PIN );
+    temp = DHTIN.temperature * 1.8 + 32;
+    humidity = DHTIN.humidity;
     photoCellReading = analogRead( LIGHT_PIN );
+    soilMoisture = analogRead( SOIL_PIN1 );
 
     if ( temp > threshold_temperature )
     {
@@ -145,6 +146,8 @@ void loop() {
       toSend += photoCellReading;
       toSend += ";";
       toSend += humidity;
+      toSend += ";";
+      toSend += soilMoisture;
       toSend += ";";
   
       Serial.print( toSend );
