@@ -48,8 +48,8 @@ void setup() {
         yield();
     }
 
-pinMode(Soil_inside_D5_GPIO14_enable, OUTPUT);
-  pinMode(Soil_outside_D6_GPIO12_enable, OUTPUT);
+pinMode(Soil_1_D5_GPIO14_enable, OUTPUT);
+  pinMode(Soil_2_D6_GPIO12_enable, OUTPUT);
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
       delay(500);
