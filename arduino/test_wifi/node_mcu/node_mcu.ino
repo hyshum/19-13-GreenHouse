@@ -19,8 +19,6 @@ int threshold_temperature = 80;
 //int soil_moisture = 10;
 
 
-#include <dht.h>
-dht DHT;
 #define DHT11_PIN D1 //Nodemcu: D1, Arduino: 4
 #define LIGHT_PIN D3  //Nodemcu: D2, Arduino: 0
 #define OUTSIDE_TEMP_PIN A0  //Nodemcu: D5, Arduino: 1
@@ -44,7 +42,6 @@ unsigned long FinishTime;
 unsigned long RunningTime;
 unsigned long TotalRunningTime = 0;
 int heaterindex = 0;
-char htmlResponse[3000];
 int Warning_temperture_low = 0;
 
 
@@ -67,15 +64,14 @@ time_t nowish = 1510592825;
 
 void NTPConnect(void)
 {
+  
     configTime( TIME_ZONE * 3600, DST * 3600, "pool.ntp.org", "time.nist.gov" );
     now = time( nullptr );
     while( now < nowish )
     {
       delay( 500 );
-      //Serial.print(".");
       now = time( nullptr );
     }
-    //Serial.println( "done!" );
     struct tm timeinfo;
     gmtime_r( &now, &timeinfo );
 }
@@ -140,6 +136,7 @@ void lwMQTTErrConnection(lwmqtt_return_code_t reason)
     
 }
 
+//Connect to MQTT
 void connectToMqtt(bool nonBlocking = false)
 {
   Serial.print("MQTT connecting ");
@@ -147,7 +144,6 @@ void connectToMqtt(bool nonBlocking = false)
   {
     if (client.connect(THINGNAME))
     {
-      Serial.println("connected!");
       if (!client.subscribe(MQTT_SUB_TOPIC))
         lwMQTTErr(client.lastError());
     }
@@ -170,6 +166,7 @@ void connectToMqtt(bool nonBlocking = false)
   }
 }
 
+//connect to wifi network
 void connectToWiFi(String init_str)
 {
   while (WiFi.status() != WL_CONNECTED)
@@ -205,6 +202,7 @@ void checkWiFiThenReboot(void)
 
 void sendData(void)
 {
+  //assign all elements to json document and then send to MQTT
   DynamicJsonDocument jsonBuffer(1024);
   JsonObject root = jsonBuffer.to<JsonObject>();
   JsonObject state = root.createNestedObject("state");
@@ -226,15 +224,21 @@ String incomingString;
 
 void setup() {
 
-  
+  //write pin indicates nodeMCU -> Arduino comm
   pinMode(WRITE_PIN, OUTPUT);
   digitalWrite(WRITE_PIN, LOW);
+
+  //read pin indicates Arduino -> nodeMCU comm
   pinMode(READ_PIN, INPUT);
+
+  //LED pin just used to indicate accepting data
   pinMode( LED_PIN, OUTPUT );
   digitalWrite( LED_PIN, LOW );
+  
   // Start serial
   Serial.begin(115200);
   Serial.println( "begin" );
+  
   // Connecting to a WiFi network
   WiFi.hostname( THINGNAME );
   WiFi.mode( WIFI_STA );
@@ -250,21 +254,27 @@ void setup() {
   connectToMqtt();
   
   delay( 500 );
-  }
+}
 
 String sensorArray[6];
 
+//parse string to extract measurements and assign
 void parseString( String input )
 {
  int len =  input.length();
  String current = "";
  int pos = 0;
+
+ //iterate through measurements
  for( int i = 0; i < len; i++ )
  {
+
+  //useful if number or decimal point
   if( isDigit( input.charAt(i) ) || input.charAt(i) == '.' )
   {
     current += input.charAt( i );
   }
+  //semicolon used to separate measurements
   else if( input.charAt(i) == ';' )
   {
     sensorArray[pos] = current;
@@ -272,12 +282,16 @@ void parseString( String input )
     pos = pos + 1; 
   }
  }
+
+ //use consistent parsing to extract elements
  temp = atof( sensorArray[0].c_str() );
  tempOutF = atof( sensorArray[1].c_str() );
  photoCellReading = atof( sensorArray[2].c_str() );
  humidity = atof( sensorArray[3].c_str() ); 
  soilMoisture = atof( sensorArray[4].c_str() );
  soilCorrected = -.51*soilMoisture + 235; 
+
+ //soil moisture must be adjusted as it is a direct analog reading
  if( soilCorrected > 100 )
  {
    soilCorrected = 100;
@@ -288,30 +302,38 @@ void parseString( String input )
  }
 }
 
+
 bool read_val = false;
 unsigned long start_time = 0;
 unsigned long end_time = 0;
 void loop() {
 
-    
+    //read read_pin to see if arduino is sending data    
     read_val = digitalRead( READ_PIN );
     end_time = millis();
     digitalWrite( WIFI_ON, HIGH );
 
+    //check that your connected and attempt to reconnect if not
     if( !client.connected() )
     {
       checkWiFiThenMQTT();
     }
     else
     {
+      //if connected, stay connected
       client.loop();
-    
+
+      //time how long between last time data was sent and now
       if( end_time - start_time > 1000000 )
       {
           start_time = end_time;
           changeTemp = 1;
       }
-      
+
+      //change threshold temperature on arduino
+      //may be removed if we decide to go with smart outlet
+      //hard coded threshold temp for now
+      //in future will be changed from web app
       if( changeTemp == 1 && !read_val )
       {
         digitalWrite( WRITE_PIN, HIGH );
@@ -324,12 +346,16 @@ void loop() {
         digitalWrite( WRITE_PIN, LOW );
         delay( 5000 );
       }
+
+      //if Arduino is attempting to write
       else if( read_val == 1 )
       {
-        //digitalWrite( WIFI_ON, HIGH );
+        //delay
         delay( 100 );
+        //LED indicates write is occurring
         digitalWrite( LED_PIN, HIGH );
-  
+
+        //read from Serial port
         while( true )
         {
           if (Serial.available() > 0) 
@@ -340,6 +366,8 @@ void loop() {
             //check for prepending
             if( incomingString[0] == 'D' && incomingString[1] == 'T' && incomingString[2] == 'A' )
             {
+
+              //pjarse string and then send to AWS
               parseString( incomingString );
               sendData();
               break;
@@ -351,6 +379,7 @@ void loop() {
       }
       else
       { 
+        //turn LED off if not reading from arduino
         digitalWrite( LED_PIN, LOW );
       }
     }
