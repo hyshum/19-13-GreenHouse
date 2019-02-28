@@ -96,8 +96,8 @@ void loop() {
     state_reported["Temperature_outside"] = tem_DHT_outside_D4_GPIO2;
     state_reported["Humidity_inside"] = hum_DHT_inside_D1_GPIO5;
     state_reported["Humidity_outside"] = hum_DHT_outside_D4_GPIO2;
-    state_reported["Soil Moisture 1"] = Soil_1;
-    state_reported["Soil Moisture 2"] = Soil_2;
+    state_reported["Soil Moisture 1"] = -0.33*Soil_1 + 165;
+    state_reported["Soil Moisture 2"] = -0.33*Soil_2 + 165;
     serializeJson(root, Serial);
     Serial.println();
     char shadow[measureJson(root) + 1];
