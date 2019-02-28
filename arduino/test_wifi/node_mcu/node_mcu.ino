@@ -11,8 +11,8 @@
 
 uint8_t DST = 0;
 const int MQTT_PORT = 8883;
-const char MQTT_SUB_TOPIC[] = "$aws/things/hello/shadow/update";
-const char MQTT_PUB_TOPIC[] = "$aws/things/hello/shadow/update";
+const char MQTT_SUB_TOPIC[] = "$aws/things/greenhouse/shadow/update";
+const char MQTT_PUB_TOPIC[] = "$aws/things/greenhouse/shadow/update";
 
 int threshold_temperature = 80;
 
@@ -145,7 +145,7 @@ void messageReceived(String &topic, String &payload)
 
 void lwMQTTErr(lwmqtt_err_t reason)
 {
-  /*
+  
   if (reason == lwmqtt_err_t::LWMQTT_SUCCESS)
     Serial.print("Success");
   else if (reason == lwmqtt_err_t::LWMQTT_BUFFER_TOO_SHORT)
@@ -173,12 +173,12 @@ void lwMQTTErr(lwmqtt_err_t reason)
   else if (reason == lwmqtt_err_t::LWMQTT_SUBACK_ARRAY_OVERFLOW)
     Serial.print("Suback array overflow");
   else if (reason == lwmqtt_err_t::LWMQTT_PONG_TIMEOUT)
-    Serial.print("Pong timeout");*/
+    Serial.print("Pong timeout");
 }
 
 void lwMQTTErrConnection(lwmqtt_return_code_t reason)
 {
-  /*
+  
   if (reason == lwmqtt_return_code_t::LWMQTT_CONNECTION_ACCEPTED)
     Serial.print("Connection Accepted");
   else if (reason == lwmqtt_return_code_t::LWMQTT_UNACCEPTABLE_PROTOCOL)
@@ -193,32 +193,32 @@ void lwMQTTErrConnection(lwmqtt_return_code_t reason)
     Serial.print("Not Authorized");
   else if (reason == lwmqtt_return_code_t::LWMQTT_UNKNOWN_RETURN_CODE)
     Serial.print("Unknown Return Code");
-    */
+    
 }
 
 void connectToMqtt(bool nonBlocking = false)
 {
-  //Serial.print("MQTT connecting ");
+  Serial.print("MQTT connecting ");
   while (!client.connected())
   {
     if (client.connect(THINGNAME))
     {
-      //Serial.println("connected!");
+      Serial.println("connected!");
       if (!client.subscribe(MQTT_SUB_TOPIC))
         lwMQTTErr(client.lastError());
     }
     else
     {
-      //Serial.print("failed, reason -> ");
+      Serial.print("failed, reason -> ");
       lwMQTTErrConnection(client.returnCode());
       if (!nonBlocking)
       {
-        //Serial.println(" < try again in 5 seconds");
+        Serial.println(" < try again in 5 seconds");
         delay(5000);
       }
       else
       {
-        //Serial.println(" <");
+        Serial.println(" <");
       }
     }
     if (nonBlocking)
@@ -264,11 +264,12 @@ void sendData(void)
   JsonObject root = jsonBuffer.to<JsonObject>();
   JsonObject state = root.createNestedObject("state");
   JsonObject state_reported = state.createNestedObject("reported");
-  state_reported["Temperature_inside"] = tempOutF;
-  state_reported["Temperature_outside"] = temp;
-  state_reported["Humidity"] = humidity;
-  state_reported["Soil Moisture"] = random(100);  
-  serializeJson(root, Serial);
+  state_reported["value"] = random(100);
+  state_reported["tmpi"] = temp;
+  state_reported["tmpo"] = tempOutF;
+  state_reported["mdy"] = humidity;
+  state_reported["sm1"] = random(100);  
+  //serializeJson(root, Serial);
   char shadow[measureJson(root) + 1];
   serializeJson(root, shadow, sizeof(shadow));
   if (!client.publish(MQTT_PUB_TOPIC, shadow, false, 0))
@@ -362,6 +363,7 @@ void handleSave() {
 
 void setup() {
 
+  
   pinMode(WRITE_PIN, OUTPUT);
   digitalWrite(WRITE_PIN, LOW);
   pinMode(READ_PIN, INPUT);
@@ -369,19 +371,21 @@ void setup() {
   digitalWrite( LED_PIN, LOW );
   // Start serial
   Serial.begin(115200);
-
+  Serial.println( "begin" );
   // Connecting to a WiFi network
   WiFi.hostname( THINGNAME );
   WiFi.mode( WIFI_STA );
   WiFi.begin( ssid, password );
   connectToWiFi(String( "connecting..." ) );
   NTPConnect();
+  Serial.println( "wifi" );
   net.setTrustAnchors( &cert );
   net.setClientRSACert( &client_crt, &key );
   client.begin( MQTT_HOST, MQTT_PORT, net );
   client.onMessage( messageReceived );
 
   connectToMqtt();
+  
   delay( 500 );
   }
 
@@ -416,85 +420,65 @@ unsigned long start_time = 0;
 unsigned long end_time = 0;
 void loop() {
 
+    
     read_val = digitalRead( READ_PIN );
     end_time = millis();
     digitalWrite( WIFI_ON, HIGH );
-    /*
-    if( end_time - start_time > 1000000 )
+
+    if( !client.connected() )
     {
-        start_time = end_time;
-        changeTemp = 1;
-    }
-    */
-    if( changeTemp == 1 && !read_val )
-    {
-      digitalWrite( WRITE_PIN, HIGH );
-      delay( 5000 );
-      String tmpString = "TMP";
-      tmpString += threshold_temperature;
-      Serial.print( tmpString );
-      digitalWrite( LED_PIN, LOW );
-      changeTemp = false;
-      digitalWrite( WRITE_PIN, LOW );
-      delay( 5000 );
-    }
-    else if( read_val == 1 )
-    {
-      //digitalWrite( WIFI_ON, HIGH );
-      delay( 100 );
-      while( true )
-      {
-        if (Serial.available() > 0) 
-        {
-        
-          // read the oldest byte in the serial buffer:
-          incomingString = Serial.readString();
-          //check for prepending
-          if( incomingString[0] == 'D' && incomingString[1] == 'T' && incomingString[2] == 'A' )
-          {
-            parseString( incomingString );
-            digitalWrite( LED_PIN, HIGH );
-            break;
-          }
-        delay( 5000 );
-        }
-       
-      }
+      checkWiFiThenMQTT();
     }
     else
-    { 
-      digitalWrite( LED_PIN, LOW );
-     // server.handleClient();
-  //Serial.print("The current threshold temperature is ");
-  //Serial.println(threshold_temperature);
-  //Serial.println("");
-  /*
-      if (client.connect(thingspeakserver, 80)) //   "184.106.153.149" or api.thingspeak.com
+    {
+      client.loop();
+    
+      if( end_time - start_time > 1000000 )
       {
-  
-          String postStr = apiKey;
-          postStr += "&field1=";
-          postStr += String(temp);   //Temperature
-          postStr += "&field2=";
-          postStr += String(humidity);   //Humidity
-          postStr += "&field3=";
-          postStr += String(tempOutF);   //Humidity
-          postStr += "\r\n\r\n";
-  
-          client.print("POST /update HTTP/1.1\n");
-          client.print("Host: api.thingspeak.com\n");
-          client.print("Connection: close\n");
-          client.print("X-THINGSPEAKAPIKEY: " + apiKey + "\n");
-          client.print("Content-Type: application/x-www-form-urlencoded\n");
-          client.print("Content-Length: ");
-          client.print(postStr.length());
-          client.print("\n\n");
-          client.print(postStr);
+          start_time = end_time;
+          changeTemp = 1;
       }
-      client.stop();
-*/
-
-
-      delay(5000);
+      
+      if( changeTemp == 1 && !read_val )
+      {
+        digitalWrite( WRITE_PIN, HIGH );
+        delay( 5000 );
+        String tmpString = "TMP";
+        tmpString += threshold_temperature;
+        Serial.print( tmpString );
+        digitalWrite( LED_PIN, LOW );
+        changeTemp = false;
+        digitalWrite( WRITE_PIN, LOW );
+        delay( 5000 );
+      }
+      else if( read_val == 1 )
+      {
+        //digitalWrite( WIFI_ON, HIGH );
+        delay( 100 );
+        digitalWrite( LED_PIN, HIGH );
+  
+        while( true )
+        {
+          if (Serial.available() > 0) 
+          {
+          
+            // read the oldest byte in the serial buffer:
+            incomingString = Serial.readString();
+            //check for prepending
+            if( incomingString[0] == 'D' && incomingString[1] == 'T' && incomingString[2] == 'A' )
+            {
+              parseString( incomingString );
+              sendData();
+              break;
+            }
+          delay( 5000 );
+          }
+         
+        }
+      }
+      else
+      { 
+        digitalWrite( LED_PIN, LOW );
+      }
     }
 }

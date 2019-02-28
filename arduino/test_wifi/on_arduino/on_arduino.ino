@@ -67,6 +67,7 @@ void loop() {
   end_time = millis();
   if( read_val == 1 )
   {
+      digitalWrite( LED_PIN, HIGH );
        digitalWrite( WRITE_PIN, LOW );
       //digitalWrite( LED_PIN, HIGH ); 
       delay( 100 );
@@ -87,6 +88,7 @@ void loop() {
   
   else 
   {
+    digitalWrite( LED_PIN, LOW );
     delay( 5000 );
     toSend = "";
     out_reading = analogRead( OUTSIDE_TEMP_PIN );
@@ -95,7 +97,7 @@ void loop() {
   
     tempOutF = ( voltage - 0.5 ) * 100 * 9.0/5.0;
     chk = DHT.read11( DHT11_PIN );
-    temp = DHT.temperature * 1.8 + 32;
+    temp = DHT.temperature * 1.8;
     humidity = DHT.humidity;
     photoCellReading = analogRead( LIGHT_PIN );
 
