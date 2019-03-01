@@ -28,6 +28,11 @@ unsigned long TotalRunningTime = 0;
 int heaterindex = 0;
 int Warning_temperture_low = 0;
 
+unsigned long startTimeout;
+unsigned long endTimeout;
+unsigned long timeout = 30000;
+
+
 int sensorValue = 0;  
 int percent = 0;
 String percentString ="0";
@@ -81,6 +86,7 @@ void loop() {
   
   if( read_val == 1 )
   {
+      startTimeout = millis();
       //turn on LED to indicate reading from nodeMCU
       digitalWrite( LED_PIN, HIGH );
       digitalWrite( WRITE_PIN, LOW );
@@ -88,6 +94,12 @@ void loop() {
       delay( 100 );
       while( true )
       {
+
+        endTimeout = millis();
+        if( endTimeout - startTimeout > timeout )
+        {
+          break;
+        }
         //read string from nodeMCU
         if( Serial.available() > 0 )
         {

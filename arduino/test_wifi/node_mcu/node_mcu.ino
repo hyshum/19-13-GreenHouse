@@ -44,7 +44,9 @@ unsigned long TotalRunningTime = 0;
 int heaterindex = 0;
 int Warning_temperture_low = 0;
 
-
+unsigned long startTimeout;
+unsigned long endTimeout;
+unsigned long timeout = 30000;
 
 int sensorValue = 0;  
 int percent = 0;
@@ -355,9 +357,15 @@ void loop() {
         //LED indicates write is occurring
         digitalWrite( LED_PIN, HIGH );
 
+        startTimeout = millis();        
         //read from Serial port
         while( true )
         {
+          endTimeout = millis();
+          if( endTimeout - startTimeout > timeout )
+          {
+            break;
+          }
           if (Serial.available() > 0) 
           {
           
