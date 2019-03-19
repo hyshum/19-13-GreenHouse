@@ -1,5 +1,16 @@
 //https://www.youtube.com/watch?v=AiCa6E_DBL8
 
+
+
+
+//Time stamp --copy---
+//https://github.com/jumejume1/NodeMCU_ESP8266/blob/master/READ_TIME_FROM_INTERNET/READ_TIME_FROM_INTERNET.ino
+//https://github.com/esp8266/Arduino/blob/master/tools/sdk/libc/xtensa-lx106-elf/include/time.h
+#include <time.h>
+int timezone = -4 * 3600;
+int dst = 0;
+//Done copy
+
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 //https://github.com/bblanchon/ArduinoJson (use v6.xx)
@@ -64,15 +75,20 @@ void setup() {
     }
 
     //Time stamp --copy---
-    timeClient.begin();
+    configTime(timezone, dst, "pool.ntp.org","time.nist.gov");
+    while(!time(nullptr)){
+      Serial.print("*");
+       delay(1000);
+     }
     //Done copy
 }
 
 void loop() {
   if (client.isConnected()) {
     //Time stamp --copy---
-    timeClient.update();
-    count = timeClient.getSeconds();
+    time_t now = time(nullptr);
+    struct tm* p_tm = localtime(&now);
+    count = p_tm->tm_sec;
     //Done copy
 
     DynamicJsonDocument jsonBuffer;
