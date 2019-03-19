@@ -50,7 +50,8 @@ iamKeyId, iamSecretKey);
 AWSConnectionParams cp(sigv4);
 AWSWebSocketClientAdapter adapter(cp);
 AWSMqttClient client(adapter, cp);
-int count = 0;
+int Hourminsec = 0;
+int Yearmonthdate = 0;
 void setup() {
 
     Serial.begin(115200);
@@ -88,16 +89,22 @@ void loop() {
     //Time stamp --copy---
     time_t now = time(nullptr);
     struct tm* p_tm = localtime(&now);
-    count = p_tm->tm_sec;
-    count += p_tm->tm_min*100;
-    count += p_tm->tm_hour*10000;
+    Hourminsec = p_tm->tm_sec;
+    Hourminsec += p_tm->tm_min*100;
+    Hourminsec += p_tm->tm_hour*10000;
+    Hourminsec += p_tm->tm_mday*1000000;
+    Hourminsec += (p_tm->tm_mon + 1)*100000000;
+    Yearmonthdate = p_tm->tm_mday;
+    Yearmonthdate = (p_tm->tm_mon + 1)*100;
+    Yearmonthdate = (p_tm->tm_year + 1900)*10000;
     //Done copy
 
     DynamicJsonDocument jsonBuffer;
     JsonObject root = jsonBuffer.to<JsonObject>();
     JsonObject state = root.createNestedObject("state");
     JsonObject state_reported = state.createNestedObject("reported");
-    state_reported["time"] = count;
+    state_reported["Date"] = Yearmonthdate;
+    state_reported["Time"] = Hourminsec;
     state_reported["Temperature_inside"] = random(100);
     state_reported["Temperature_outside"] = random(100);
     state_reported["Humidity"] = random(100);
