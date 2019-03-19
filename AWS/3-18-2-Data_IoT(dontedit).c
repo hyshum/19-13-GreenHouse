@@ -89,6 +89,8 @@ void loop() {
     time_t now = time(nullptr);
     struct tm* p_tm = localtime(&now);
     count = p_tm->tm_sec;
+    count += p_tm->tm_min*100;
+    count += p_tm->tm_hour*10000;
     //Done copy
 
     DynamicJsonDocument jsonBuffer;
