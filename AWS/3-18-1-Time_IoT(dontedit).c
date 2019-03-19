@@ -1,5 +1,18 @@
 //https://www.youtube.com/watch?v=AiCa6E_DBL8
 
+
+
+
+//Time stamp --copy---
+//https://lastminuteengineers.com/esp8266-ntp-server-date-time-tutorial/
+//https://github.com/arduino-libraries/NTPClient
+
+#include <NTPClient.h>
+#include <WiFiUdp.h>
+const long utcOffsetInSeconds = -14400;
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
+//Done copy
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 //https://github.com/bblanchon/ArduinoJson (use v6.xx)
@@ -13,6 +26,17 @@
 
 const char *ssid = "Volcano";
 const char *password = "Cannonball";
+
+//Time stamp --copy---
+//https://lastminuteengineers.com/esp8266-ntp-server-date-time-tutorial/
+//https://github.com/arduino-libraries/NTPClient
+
+#include <NTPClient.h>
+#include <WiFiUdp.h>
+const long utcOffsetInSeconds = -14400;
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP, "pool.ntp.org", utcOffsetInSeconds);
+//Done copy
 
 // See `src/aws_iot_config.h` for formatting
 char *region = (char *) "us-east-1";
@@ -51,15 +75,24 @@ void setup() {
         { Serial.printf("Got msg '%s' on topic %s\n", msg, topic); }
       );
     }
+
+    //Time stamp --copy---
+    timeClient.begin();
+    //Done copy
 }
 
 void loop() {
   if (client.isConnected()) {
+    //Time stamp --copy---
+    timeClient.update();
+    count = timeClient.getSeconds();
+    //Done copy
+
     DynamicJsonDocument jsonBuffer;
     JsonObject root = jsonBuffer.to<JsonObject>();
     JsonObject state = root.createNestedObject("state");
     JsonObject state_reported = state.createNestedObject("reported");
-    state_reported["Time"] = count;
+    state_reported["time"] = count;
     state_reported["Temperature_inside"] = random(100);
     state_reported["Temperature_outside"] = random(100);
     state_reported["Humidity"] = random(100);
@@ -76,6 +109,5 @@ void loop() {
     Serial.println("Not connected...");
     delay(2000);
   }
-count = count + 1;
   delay(20000);
 }
