@@ -1,4 +1,6 @@
-// Write the current time to DynamoDB, replace the current_time
+//Read data from IOT
+
+
 
 'use strict';
 
@@ -19,11 +21,14 @@ exports.handler = (event, context, callback) => {
             Read_Current_time(function(Current_time){
                 Read_Interval(function(Interval){
                     Read_Last_time(function(Last_time){
-                        console.log(Lowest_temperature);
-                        console.log(Highest_temperature);
-                        console.log(Current_time);
-                        console.log(Interval);
-                        console.log(Last_time);
+                        Read_IOT_Data(event,function(IOT_data){
+                            console.log(Lowest_temperature);
+                            console.log(Highest_temperature);
+                            console.log(Current_time);
+                            console.log(Interval);
+                            console.log(Last_time);
+                            console.log(IOT_data);
+                        });
                     });
                 });
             });
@@ -138,4 +143,16 @@ function Read_Last_time(callback) {
             return callback(Last_time);
         }
     });
+}
+
+function Read_IOT_Data(event,callback) {
+    var datapackage = JSON.stringify(event, null, 2);
+    console.log('Data Receved from IOT');
+    var Date =  JSON.parse(datapackage).reported.Date;
+    var Time =  JSON.parse(datapackage).reported.Time;
+    var Temperature_inside =  JSON.parse(datapackage).reported.Temperature_inside;
+    var Temperature_outside =  JSON.parse(datapackage).reported.Temperature_outside;
+    var Humidmity =  JSON.parse(datapackage).reported.Humidity;
+    var IOT_data=[Date,Time,Temperature_inside,Temperature_outside,Humidmity];
+    return callback(IOT_data);
 }
