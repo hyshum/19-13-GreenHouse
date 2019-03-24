@@ -1,0 +1,1 @@
+//Write the current time to DynamoDB, replace the current_time
