@@ -92,11 +92,9 @@ void loop() {
     Hourminsec = p_tm->tm_sec;
     Hourminsec += p_tm->tm_min*100;
     Hourminsec += p_tm->tm_hour*10000;
-    Hourminsec += p_tm->tm_mday*1000000;
-    Hourminsec += (p_tm->tm_mon + 1)*100000000;
     Yearmonthdate = p_tm->tm_mday;
-    Yearmonthdate = (p_tm->tm_mon + 1)*100;
-    Yearmonthdate = (p_tm->tm_year + 1900)*10000;
+    Yearmonthdate += (p_tm->tm_mon + 1)*100;
+    Yearmonthdate += (p_tm->tm_year + 1900)*10000;
     //Done copy
 
     DynamicJsonDocument jsonBuffer;
