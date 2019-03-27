@@ -1,5 +1,15 @@
-// Write the current time to DynamoDB, replace the Last_time
+//If temperature in the greenhouse > highest_temperature
+    //Send the alarm
+//Else if temperature in the greenhouse < lowest_temperature
+    //Send the alarm
+//Else
 
+//If Specifictime(input on web, time that the client wants to receive the update)> last_time && Specifictime < current_time
+    //If Date = Week_number(input on web, the day in a week that the client wants to receive the update)
+        //Send the regular update
+
+//Originally, sensor data is sent to database using IOT
+//This version sent data to database via lambda
 
 'use strict';
 
@@ -20,6 +30,7 @@ exports.handler = (event, context, callback) => {
             Read_Interval(function(Interval){
                 Read_Last_time(function(Last_time){
                     Read_IOT_Data(event,function(IOT_data){
+                        Write_Item_dynamoDB(IOT_data);
                         Write_Current_time(IOT_data[1]);
                         console.log(Lowest_temperature);
                         console.log(Highest_temperature);
@@ -41,7 +52,7 @@ function Read_Lowest_temperature(callback) {
             TableName: 'GreenhouseDatabase',
             Key: {
                 'reported' : {S: 'Lowest_temperature'},
-                'index' : {S: '0001'},
+                'index' : {S: '0002'},
             }
         };
         ddb.getItem(params_Lowest_temperature, function(err, data,response) {
@@ -62,7 +73,7 @@ function Read_Highest_temperature(callback) {
         TableName: 'GreenhouseDatabase',
         Key: {
             'reported' : {S: 'Highest_temperature'},
-            'index' : {S: '0001'},
+            'index' : {S: '0002'},
         }
     };
     ddb.getItem(params_Highest_temperature, function(err, data,response) {
@@ -145,15 +156,34 @@ function Read_Last_time(callback) {
 function Read_IOT_Data(event,callback) {
     var datapackage = JSON.stringify(event, null, 2);
     console.log('Data Receved from IOT');
-    var Date =  JSON.parse(datapackage).reported.Date;
-    var Time =  JSON.parse(datapackage).reported.Time;
-    var Temperature_inside =  JSON.parse(datapackage).reported.Temperature_inside;
-    var Temperature_outside =  JSON.parse(datapackage).reported.Temperature_outside;
-    var Humidmity =  JSON.parse(datapackage).reported.Humidity;
+    var Date =  1000;//JSON.parse(datapackage).reported.Date;
+    var Time =  1000;//JSON.parse(datapackage).reported.Time;
+    var Temperature_inside =  1000;//JSON.parse(datapackage).reported.Temperature_inside;
+    var Temperature_outside =  1000;//JSON.parse(datapackage).reported.Temperature_outside;
+    var Humidmity = 1000;// JSON.parse(datapackage).reported.Humidity;
     var IOT_data=[Date,Time,Temperature_inside,Temperature_outside,Humidmity];
     return callback(IOT_data);
 }
 
+function Write_Item_dynamoDB(IOT_data) {
+    var params_IOT_data = {
+        TableName: 'GreenhouseDatabase',
+        Item: {
+            'reported' : {S: 'Sensor_Data'},
+            'index' : {S: IOT_data[0].toString() + IOT_data[1].toString()},
+            'Temperature_inside': {N: IOT_data[2].toString()},
+            'Temperature_outside': {N: IOT_data[3].toString()},
+            'Humidmity': {N: IOT_data[4].toString()}
+        }
+    };
+        ddb.putItem(params_IOT_data, function(err, data) {
+        if (err) {
+            console.log("Error Creating Item", err);
+        } else {
+            console.log("Success Creating Item");
+        }
+    });
+}
 
 function Write_Current_time(Current_time_input) {
     var params_Current_time = {

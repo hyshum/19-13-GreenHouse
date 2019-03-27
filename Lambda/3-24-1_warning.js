@@ -50,12 +50,12 @@ exports.handler = (event, context, callback) => {
         //SendMessage-Begin
         var datapackage = JSON.stringify(event, null, 2);
         console.log('Data Receved from IOT');
-        var Date =  JSON.parse(datapackage).reported.Date;
+        var DateYMD =  JSON.parse(datapackage).reported.Date;
         var Time =  JSON.parse(datapackage).reported.Time;
         var Temperature_inside =  JSON.parse(datapackage).reported.Temperature_inside;
         var Temperature_outside =  JSON.parse(datapackage).reported.Temperature_outside;
         var Humidmity =  JSON.parse(datapackage).reported.Humidity;
-        var message1 = 'Current Time: ' + Date + '-' + Time +'\n';
+        var message1 = 'Current Time: ' + DateYMD + '-' + Time +'\n';
         var message2 = 'The Temperature inside the greenhouse is: ' + Temperature_inside + 'degrees.\n';
         var message3 = 'The Temperature outside the greenhouse is: ' + Temperature_outside + 'degrees.\n';
         var message4 = 'The Humidity inside the greenhouse is ' + Humidmity + '%' + '\n';

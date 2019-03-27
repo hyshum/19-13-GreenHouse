@@ -106,7 +106,7 @@ void loop() {
     state_reported["Temperature_inside"] = random(100);
     state_reported["Temperature_outside"] = random(100);
     state_reported["Humidity"] = random(100);
-    state_reported["Soil Moisture"] = random(100);
+    state_reported["Soil_Moisture"] = random(100);
     serializeJson(root, Serial);
     Serial.println();
     char shadow[measureJson(root) + 1];
