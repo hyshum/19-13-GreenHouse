@@ -36,6 +36,7 @@ exports.handler = (event, context, callback) => {
                         Write_Item_dynamoDB(IOT_data);
                         Write_Current_time(IOT_data[1]);
                         Send_Update_Message(IOT_data,Highest_temperature,Lowest_temperature,context,Last_time,Specific_time);
+                        Send_Warning_Message(IOT_data,Highest_temperature,Lowest_temperature,context);
                     });
                 });
             });
@@ -134,9 +135,9 @@ function Read_Last_time(callback) {
 function Read_IOT_Data(event,callback) {
     var datapackage = JSON.stringify(event, null, 2);
     console.log('Data Receved from IOT');
-    var Date =  1000;//JSON.parse(datapackage).reported.Date;
-    var Time =  1000;//JSON.parse(datapackage).reported.Time;
-    var Temperature_inside =  1000;//JSON.parse(datapackage).reported.Temperature_inside;
+    var Date =  20190327;//JSON.parse(datapackage).reported.Date;
+    var Time =  220000;//JSON.parse(datapackage).reported.Time;
+    var Temperature_inside =  500;//JSON.parse(datapackage).reported.Temperature_inside;
     var Temperature_outside =  1000;//JSON.parse(datapackage).reported.Temperature_outside;
     var Humidmity = 1000;// JSON.parse(datapackage).reported.Humidity;
     var IOT_data=[Date,Time,Temperature_inside,Temperature_outside,Humidmity];
@@ -224,9 +225,8 @@ function Send_Update_Message(IOT_data,Highest_temperature,Lowest_temperature,con
 }
 
 
-function Send_Update_Message(IOT_data,Highest_temperature,Lowest_temperature,context) {
+function Send_Warning_Message(IOT_data,Highest_temperature,Lowest_temperature,context) {
     var Temperature_inside = IOT_data[2];
-    var Temperature_outside = IOT_data[3];
 
     var index = 0;
     var messagewarning_temperature_too_low = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
