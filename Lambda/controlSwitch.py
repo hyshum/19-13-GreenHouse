@@ -8,4 +8,4 @@ def turnOff():
 	r = requests.get( "https://maker.ifttt.com/trigger/ec464greenhouseOFF/with/key/cvJYmevJ910Cxw7Zr5Y6Ac", {} )
 	print( r )
 
-turnOff()
+turnOn()
