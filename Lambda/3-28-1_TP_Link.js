@@ -6,6 +6,7 @@
 
 console.log('Loading function');
 var AWS = require("aws-sdk");
+const request = require('request');
 var highest;
 var Lowest;
 //Readfrom DB
@@ -28,6 +29,7 @@ exports.handler = (event, context, callback) => {
                 Read_Last_time(function(Last_time){
                     console.log(Last_time);
                     Read_IOT_Data(event,function(IOT_data){
+                        Switchon_off();
                         console.log(IOT_data);
                         Write_Item_dynamoDB(IOT_data);
                         Write_Current_time(IOT_data[1]);
@@ -220,6 +222,15 @@ function Send_Update_Message(IOT_data,Highest_temperature,Lowest_temperature,con
         //SendMessage-END
 }
 
+function Switchon_off() {
+    console.log('Running Switch');
+    const option = 'https://maker.ifttt.com/trigger/ec464greenhouseOFF/with/key/cvJYmevJ910Cxw7Zr5Y6Ac';
+    request(option, function (error, response, body) {
+        console.log('error:', error); // Print the error if one occurred
+        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+        console.log('body:', body); // Print the HTML for the Google homepage.
+      });
+}
 
 function Send_Warning_Message(IOT_data,Highest_temperature,Lowest_temperature,context) {
     var Temperature_inside = IOT_data[2];

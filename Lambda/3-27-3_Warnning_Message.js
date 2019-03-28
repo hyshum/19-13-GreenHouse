@@ -150,6 +150,8 @@ function Write_Item_dynamoDB(IOT_data) {
         Item: {
             'reported' : {S: 'Sensor_Data'},
             'index' : {S: IOT_data[0].toString() + IOT_data[1].toString()},
+            'Date': {N:IOT_data[0].toString()},
+            'Time': {N: IOT_data[1].toString()},
             'Temperature_inside': {N: IOT_data[2].toString()},
             'Temperature_outside': {N: IOT_data[3].toString()},
             'Humidmity': {N: IOT_data[4].toString()}
