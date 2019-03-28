@@ -1,3 +1,5 @@
+//This function send regular update everything when receive data package
+
 //If temperature in the greenhouse > highest_temperature
     //Send the alarm
 //Else if temperature in the greenhouse < lowest_temperature
@@ -7,9 +9,6 @@
 //If Specifictime(input on web, time that the client wants to receive the update)> last_time && Specifictime < current_time
     //If Date = Week_number(input on web, the day in a week that the client wants to receive the update)
         //Send the regular update
-
-//Originally, sensor data is sent to database using IOT
-//This version sent data to database via lambda
 
 'use strict';
 
@@ -31,6 +30,7 @@ exports.handler = (event, context, callback) => {
                     Read_IOT_Data(event,function(IOT_data){
                         Write_Item_dynamoDB(IOT_data);
                         Write_Current_time(IOT_data[1]);
+                        Send_Warning_Message(IOT_data,Highest_temperature,Lowest_temperature,context);
                         console.log(Lowest_temperature);
                         console.log(Highest_temperature);
                         console.log(Specific_time);
@@ -179,4 +179,44 @@ function Write_Current_time(Current_time_input) {
             console.log("Success Writing Current_time");
         }
     });
+}
+
+function Send_Warning_Message(IOT_data,Highest_temperature,Lowest_temperature,context) {
+    var DateYMD = IOT_data[0];
+    var Time = IOT_data[1];
+    var Temperature_inside = IOT_data[2];
+    var Temperature_outside = IOT_data[3];
+    var Humidmity = IOT_data[4];
+    var message1 = 'Current Time: ' + DateYMD + '-' + Time +'\n';
+    var message2 = 'The Temperature inside the greenhouse is: ' + Temperature_inside + 'degrees.\n';
+    var message3 = 'The Temperature outside the greenhouse is: ' + Temperature_outside + 'degrees.\n';
+    var message4 = 'The Humidity inside the greenhouse is ' + Humidmity + '%' + '\n';
+    var message5 = 'Highest Temperature is ' + Highest_temperature + '\n';
+    var message6 = 'Lowest Temperature is ' + Lowest_temperature + '\n';
+    var messageupdate = message1 + message2 + message3 + message4 + message5 + message6;
+        
+    // var messagewarning_temperature_too_low = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
+    // messagewarning_temperature_too_low += ' degrees, it is lower than the lowest desired temperature.\n';
+
+    // var messagewarning_temperature_too_high = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
+    // messagewarning_temperature_too_high += ' degrees, it is higher than the highest desired temperature.\n';
+
+    // var messagesent;
+    // if (Temperature_inside < Lowest_temperature) {
+    //     messagesent = messagewarning_temperature_too_low;
+    // }
+    // else if (Temperature_inside > Highest_temperature) {
+    // messagesent = messagewarning_temperature_too_high;
+    //  }
+    // else {
+    //     messagesent = messageupdate;
+    // }
+
+    var sns = new AWS.SNS();
+    var params = {
+        Message: messageupdate,
+        TopicArn: "arn:aws:sns:us-east-1:812365191913:GreenhouseTemAlert"
+    };
+    sns.publish(params, context.done);
+        //SendMessage-END
 }
