@@ -14,7 +14,7 @@
 
 console.log('Loading function');
 var AWS = require("aws-sdk");
-const request = require('request');
+//const request = require('request');
 var highest;
 var Lowest;
 //Readfrom DB
@@ -32,12 +32,16 @@ exports.handler = (event, context, callback) => {
                 console.log(Specific_time);
                 Read_Last_time(function (Last_time) {
                     console.log(Last_time);
-                    Read_IOT_Data(event, function (IOT_data) {
-                        console.log(IOT_data);
-                        Write_Item_dynamoDB(IOT_data);
-                        Write_Current_time(IOT_data[1]);
-                        Send_Update_Message(IOT_data, Highest_temperature, Lowest_temperature, context, Last_time, Specific_time);
-                        Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature, context);
+                    Read_Heater_current(function (Heater_current) {
+                        console.log(Heater_current);
+                        Read_IOT_Data(event, function (IOT_data) {
+                            console.log(IOT_data);
+                            Write_Item_dynamoDB(IOT_data);
+                            Write_Current_time(IOT_data[1]);
+                            Send_Update_Message(IOT_data, Highest_temperature, Lowest_temperature, context, Last_time, Specific_time);
+                            Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature, context);
+                            Switching_On_OFF(IOT_data, Lowest_temperature,Heater_current);
+                        });
                     });
                 });
             });
@@ -68,7 +72,6 @@ function Read_Lowest_temperature(callback) {
         }
     });
 }
-
 function Read_Highest_temperature(callback) {
     var params_Highest_temperature = {
         TableName: 'GreenhouseDatabase',
@@ -89,7 +92,6 @@ function Read_Highest_temperature(callback) {
         }
     });
 }
-
 
 function Read_Specific_time(callback) {
     var params_Interval = {
@@ -133,6 +135,27 @@ function Read_Last_time(callback) {
     });
 }
 
+function Read_Heater_current(callback) {
+    var params_Last_time = {
+        TableName: 'GreenhouseDatabase',
+        Key: {
+            'reported': { S: 'Heater_current' },
+            'index': { S: '0001' },
+        }
+    };
+    ddb.getItem(params_Last_time, function (err, data, response) {
+        if (err) {
+            console.log("Error Reading Heater_current", err);
+        }
+        else {
+            console.log("Success Reading Heater_current");
+            var Jsondata = JSON.stringify(data, null, 2);
+            var Heater_current = JSON.parse(Jsondata).Item.value.N;
+            return callback(Heater_current);
+        }
+    });
+}
+
 function Read_IOT_Data(event, callback) {
     var datapackage = JSON.stringify(event, null, 2);
     console.log('Data Receved from IOT');
@@ -144,6 +167,8 @@ function Read_IOT_Data(event, callback) {
     var IOT_data = [Date, Time, Temperature_inside, Temperature_outside, Humidmity];
     return callback(IOT_data);
 }
+
+
 
 function Write_Item_dynamoDB(IOT_data) {
     var params_IOT_data = {
@@ -167,6 +192,7 @@ function Write_Item_dynamoDB(IOT_data) {
     });
 }
 
+
 function Write_Current_time(Current_time_input) {
     var params_Current_time = {
         TableName: 'GreenhouseDatabase',
@@ -181,6 +207,24 @@ function Write_Current_time(Current_time_input) {
             console.log("Error Writing Current_time", err);
         } else {
             console.log("Success Writing Current_time");
+        }
+    });
+}
+
+function Write_Heater_current(Heater_current) {
+    var params_Heater_current = {
+        TableName: 'GreenhouseDatabase',
+        Item: {
+            'reported': { S: 'Heater_current' },
+            'index': { S: '0001' },
+            'value': { N: Heater_current.toString() }
+        }
+    };
+    ddb.putItem(params_Heater_current, function (err, data) {
+        if (err) {
+            console.log("Error Writing Heater_current", err);
+        } else {
+            console.log("Success Writing Heater_current");
         }
     });
 }
@@ -226,7 +270,6 @@ function Send_Update_Message(IOT_data, Highest_temperature, Lowest_temperature, 
     }
     //SendMessage-END
 }
-
 
 function Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature, context) {
     var Temperature_inside = IOT_data[2];
@@ -281,3 +324,23 @@ function Switch_OFF() {
         console.log('body:', body); // Print the HTML for the Google homepage.
     });
 }
+
+function Switching_On_OFF(IOT_data, Lowest_temperature,Heater_current) {
+    var Temperature_inside = IOT_data[2];
+    var Heater_next;
+    if (Temperature_inside < Lowest_temperature && Heater_current == 0) {
+        //Switch_On();
+        console.log('Switch Heater On');
+        Heater_next = 1;
+        Write_Heater_current(Heater_next);
+    }
+    else if (Temperature_inside > Lowest_temperature && Heater_current == 1 ) {
+        //Switch_OFF();
+        console.log('Switch Heater Off');
+        Heater_next = 0;
+        Write_Heater_current(Heater_next);
+    }
+    else {
+    }
+}
+
