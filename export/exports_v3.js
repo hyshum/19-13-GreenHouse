@@ -1,6 +1,6 @@
-//Record the time that the heater is on 
+//Record the time by the specific month
 
-//Turn on the heater if the temperature is too low
+//Include this information in update information
 
 
 'use strict';
@@ -18,16 +18,19 @@ exports.handler = (event, context, callback) => {
     Read_Lowest_temperature(function (Lowest_temperature) {
         Read_Highest_temperature(function (Highest_temperature) {
             Read_Specific_time(function (Specific_time) {
-                Read_Last_time(function (Last_time) {
-                    Read_Heater_runningtime(function (Heater_runningtime) {
-                        Read_Heater_current(function (Heater_current) {
-                            Read_IOT_Data(event, function (IOT_data) {
-                                Count_Heater(Heater_current, parseInt(Last_time, 10), IOT_data, parseInt(Heater_runningtime, 10));
-                                Write_Item_dynamoDB(IOT_data);
-                                Write_Current_time(IOT_data[1]);
-                                Send_Update_Message(IOT_data, Highest_temperature, Lowest_temperature, context, Last_time, Specific_time);
-                                // Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature, context);
-                                Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current);
+                Read_IOT_Data(event, function (IOT_data) {
+                    Decide_month(IOT_data, function (Month) {
+                        Read_Last_time(function (Last_time) {
+                            Read_Heater_runningtime(Month, function (Heater_runningtime) {
+                                Read_Heater_current(function (Heater_current) {
+                                    Count_Heater(Month, Heater_current, parseInt(Last_time, 10), IOT_data, parseInt(Heater_runningtime, 10), function(Heater_runningtime_total) {
+                                        Write_Item_dynamoDB(IOT_data);
+                                        Write_Current_time(IOT_data[1]);
+                                        Send_Update_Message(Heater_runningtime_total, Month, IOT_data, Highest_temperature, Lowest_temperature, context, Last_time, Specific_time);
+                                        // Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature, context);
+                                        Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current);
+                                    })
+                                })
                             });
                         });
                     });
@@ -217,7 +220,7 @@ function Write_Heater_current(Heater_current) {
     });
 }
 
-function Send_Update_Message(IOT_data, Highest_temperature, Lowest_temperature, context, Last_time, Specific_time) {
+function Send_Update_Message(Heater_runningtime_total, Month, IOT_data, Highest_temperature, Lowest_temperature, context, Last_time, Specific_time) {
     var DateYMD = IOT_data[0];
     var Time = IOT_data[1];
     var Temperature_inside = IOT_data[2];
@@ -229,7 +232,8 @@ function Send_Update_Message(IOT_data, Highest_temperature, Lowest_temperature, 
     var message4 = 'The Humidity inside the greenhouse is ' + Humidmity + '%' + '\n';
     var message5 = 'Highest Temperature is ' + Highest_temperature + '\n';
     var message6 = 'Lowest Temperature is ' + Lowest_temperature + '\n';
-    var messageupdate = message1 + message2 + message3 + message4 + message5 + message6;
+    var message7 = 'Total power consumpation in ' + Month + ' is ' + Heater_runningtime_total;
+    var messageupdate = message1 + message2 + message3 + message4 + message5 + message6  + message7;
 
     var messagewarning_temperature_too_low = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
 
@@ -336,23 +340,25 @@ function Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current) {
 
 
 
-function Count_Heater(Heater_current, Last_time, IOT_data, Heater_runningtime) {
+function Count_Heater(Month, Heater_current, Last_time, IOT_data, Heater_runningtime,callback) {
     var Time = parseInt(IOT_data[1], 10);
+    var Heater_runningtime_total;
     if (Heater_current == 1) {
         console.log(Last_time);
         console.log(Time);
         console.log(Heater_runningtime);
-        Heater_runningtime += (Time - Last_time);
-        console.log(Heater_runningtime);
-        Update_Heater_runningtime(Heater_runningtime);
+        Heater_runningtime_total = Heater_runningtime + (Time - Last_time);
+        console.log(Heater_runningtime_total);
+        Update_Heater_runningtime(Month, Heater_runningtime_total);
+        return callback(Heater_runningtime_total);
     }
 }
 
-function Update_Heater_runningtime(Heater_runningtime) {
+function Update_Heater_runningtime(Month, Heater_runningtime) {
     var params_Heater_runningtime = {
         TableName: 'GreenhouseDatabase',
         Item: {
-            'reported': { S: 'Heater_runningtime' },
+            'reported': { S: 'Power_consumption_' + Month },
             'index': { S: '0001' },
             'value': { N: Heater_runningtime.toString() }
         }
@@ -368,11 +374,11 @@ function Update_Heater_runningtime(Heater_runningtime) {
 
 
 
-function Read_Heater_runningtime(callback) {
+function Read_Heater_runningtime(Month, callback) {
     var params_Heater_runningtime = {
         TableName: 'GreenhouseDatabase',
         Key: {
-            'reported': { S: 'Heater_runningtime' },
+            'reported': { S: 'Power_consumption_' + Month },
             'index': { S: '0001' },
         }
     };
@@ -388,6 +394,46 @@ function Read_Heater_runningtime(callback) {
         }
     });
 }
+
+function Decide_month(IOT_data, function (Month) {
+    var DateYMD = IOT_data[0];
+    var DateYMD_chars = DateYMD.split('');
+    var Month_number = DateYMD_chars[4] + DateYMD_chars[5];
+    var Month;
+    switch (Month_number) {
+        case '01':
+            Month = 'Jan';
+            break;
+        case '02':
+            Month = 'Feb';
+            break;
+        case '03':
+            Month = 'Mar';
+            break;
+        case '04':
+            Month = 'Apr';
+            break;
+        case '05':
+            Month = 'May';
+            break;
+        case '06':
+            Month = 'Jun';
+            break;
+        case '07':
+            Month = 'Jul';
+            break;
+        case '08':
+            Month = 'Aug';
+            break;
+        default:
+            console.log('Wrong Month Number');
+    }
+    return callback(Month);
+
+}
+
+function Read_Power_consumption_month(Month)
+
 
 function Read_IOT_Data(event, callback) {
     var datapackage = JSON.stringify(event, null, 2);

@@ -26,7 +26,6 @@ exports.handler = (event, context, callback) => {
                                 Write_Item_dynamoDB(IOT_data);
                                 Write_Current_time(IOT_data[1]);
                                 Send_Update_Message(IOT_data, Highest_temperature, Lowest_temperature, context, Last_time, Specific_time);
-                                // Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature, context);
                                 Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current);
                             });
                         });
@@ -261,39 +260,6 @@ function Send_Update_Message(IOT_data, Highest_temperature, Lowest_temperature, 
     //SendMessage-END
 }
 
-function Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature, context) {
-    var Temperature_inside = IOT_data[2];
-
-    var index = 0;
-    var messagewarning_temperature_too_low = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
-    messagewarning_temperature_too_low += ' degrees, it is lower than the lowest desired temperature.\n';
-
-    var messagewarning_temperature_too_high = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
-    messagewarning_temperature_too_high += ' degrees, it is higher than the highest desired temperature.\n';
-
-    var messagesent;
-    if (Temperature_inside < Lowest_temperature) {
-        messagesent = messagewarning_temperature_too_low;
-        index = 1;
-    }
-    else if (Temperature_inside > Highest_temperature) {
-        messagesent = messagewarning_temperature_too_high;
-        index = 1;
-    }
-    else {
-        index = 0;
-    }
-
-
-    var sns = new AWS.SNS();
-    var params = {
-        Message: messagesent,
-        TopicArn: "arn:aws:sns:us-east-1:812365191913:GreenhouseTemAlert"
-    };
-    if (index == 1) {
-        sns.publish(params, context.done);
-    }
-}
 
 function Switch_On() {
     console.log('Running Switch');
