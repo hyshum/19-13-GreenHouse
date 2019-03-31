@@ -143,17 +143,6 @@ function Read_Heater_current(callback) {
     });
 }
 
-function Read_IOT_Data(event, callback) {
-    var datapackage = JSON.stringify(event, null, 2);
-    console.log('Data Receved from IOT');
-    var Date = 20190331;//JSON.parse(datapackage).reported.Date;
-    var Time = 220010;//JSON.parse(datapackage).reported.Time;
-    var Temperature_inside = 70;//JSON.parse(datapackage).reported.Temperature_inside;
-    var Temperature_outside = 1000;//JSON.parse(datapackage).reported.Temperature_outside;
-    var Humidmity = 1000;// JSON.parse(datapackage).reported.Humidity;
-    var IOT_data = [Date, Time, Temperature_inside, Temperature_outside, Humidmity];
-    return callback(IOT_data);
-}
 
 
 
