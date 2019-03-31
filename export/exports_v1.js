@@ -5,7 +5,7 @@
 
 console.log('Loading function');
 var AWS = require("aws-sdk");
-//const request = require('request');
+const request = require('request');
 //Readfrom DB
 AWS.config.update({ region: 'us-east-1' });
 var ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
