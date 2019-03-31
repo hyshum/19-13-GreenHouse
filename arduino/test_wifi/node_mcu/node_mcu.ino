@@ -31,10 +31,14 @@ double tempOutF;
 double temp;
 double humidity;
 int soilMoisture;
+int soilMoisture2;
+int soilMoisture3;
 int on;
 int photoCellReading;
 bool changeTemp = false;
 int soilCorrected;
+int soilCorrected2;
+int soilCorrected3;
 unsigned long StartTime;
 unsigned long FinishTime;
 unsigned long RunningTime;
@@ -138,13 +142,16 @@ void lwMQTTErrConnection(lwmqtt_return_code_t reason)
 }
 
 //Connect to MQTT
-void connectToMqtt(bool nonBlocking = false)
+void connectToMqtt(bool nonBlocking = true)
 {
   Serial.print("MQTT connecting ");
   while (!client.connected())
   {
+    Serial.println( "not connected" );
     if (client.connect(THINGNAME))
     {
+      Serial.println( "connected" );
+
       if (!client.subscribe(MQTT_SUB_TOPIC))
         lwMQTTErr(client.lastError());
     }
@@ -199,29 +206,28 @@ void checkWiFiThenReboot(void)
   connectToWiFi("Checking WiFi");
   ESP.restart();
 }
-
+DynamicJsonDocument jsonBuffer(1024);
 
 void sendData(void)
 {
   //assign all elements to json document and then send to MQTT
-  DynamicJsonDocument jsonBuffer(4096);
+  
   JsonObject root = jsonBuffer.to<JsonObject>();
   JsonObject state = root.createNestedObject("state");
   JsonObject state_reported = state.createNestedObject("reported");
-  state_reported["Time"] = Hourminsec;
-  state_reported["Date"] = Yearmonthdate;
-  state_reported["Temperature_inside"] = temp;
-  state_reported["Temperature_outisde"] = tempOutF;
-  state_reported["Humidity"] = humidity;
-  state_reported["Light"] = photoCellReading;
-  state_reported["Soil_Moisture1"] = soilCorrected;
-  state_reported["Soil_Moisture2"] = soilCorrected;  
-  state_reported["Soil_Moisture3"] = soilCorrected;  
+    state_reported["ti"] = temp;   
+  state_reported["to"] = tempOutF;  
+  state_reported["h"] = humidity;   
+  state_reported["l"] = photoCellReading;    
+  state_reported["a"] = soilCorrected;      
+  state_reported["b"] = soilCorrected2;
+  state_reported["c"] = soilCorrected3;
 
   char shadow[measureJson(root) + 1];
   serializeJson(root, shadow, sizeof(shadow));
   if (!client.publish(MQTT_PUB_TOPIC, shadow, false, 0))
     lwMQTTErr(client.lastError());
+  jsonBuffer.clear();
 }
 
 
@@ -261,7 +267,7 @@ void setup() {
   delay( 500 );
 }
 
-String sensorArray[6];
+String sensorArray[7];
 
 //parse string to extract measurements and assign
 void parseString( String input )
@@ -269,7 +275,6 @@ void parseString( String input )
  int len =  input.length();
  String current = "";
  int pos = 0;
-
  //iterate through measurements
  for( int i = 0; i < len; i++ )
  {
@@ -282,20 +287,29 @@ void parseString( String input )
   //semicolon used to separate measurements
   else if( input.charAt(i) == ';' )
   {
-    sensorArray[pos] = current;
-    current = "";
-    pos = pos + 1; 
+    if( pos < 8 )
+    {
+      sensorArray[pos] = current;
+      current = "";
+      pos = pos + 1;
+    } 
   }
  }
 
  //use consistent parsing to extract elements
- temp = atof( sensorArray[0].c_str() );
- tempOutF = atof( sensorArray[1].c_str() );
- photoCellReading = atof( sensorArray[2].c_str() );
- humidity = atof( sensorArray[3].c_str() ); 
- soilMoisture = atof( sensorArray[4].c_str() );
- soilCorrected = -.51*soilMoisture + 235; 
-
+ if( pos < 8 )
+ {
+  temp = atof( sensorArray[0].c_str() );
+  tempOutF = atof( sensorArray[1].c_str() );
+  photoCellReading = atof( sensorArray[2].c_str() );
+  humidity = atof( sensorArray[3].c_str() ); 
+  soilMoisture = atoi( sensorArray[4].c_str() );
+  soilMoisture2 = atoi( sensorArray[5].c_str() );
+  soilMoisture3 = atoi( sensorArray[6].c_str() );
+  soilCorrected = -.51*soilMoisture + 235; 
+  soilCorrected2 = -.51*soilMoisture2 + 235;
+  soilCorrected3 = -.51*soilMoisture3 + 235;
+ }
  //soil moisture must be adjusted as it is a direct analog reading
  if( soilCorrected > 100 )
  {
@@ -305,6 +319,23 @@ void parseString( String input )
  {
   soilCorrected = 0;
  }
+ if( soilCorrected2 > 100 )
+ {
+  soilCorrected2 = 100;
+ }
+ else if( soilCorrected2 < 0 )
+ {
+  soilCorrected2 = 0;
+ }
+  if( soilCorrected3 > 100 )
+ {
+  soilCorrected3 = 100;
+ }
+ else if( soilCorrected3 < 0 )
+ {
+  soilCorrected3 = 0;
+ }
+ 
 }
 
 
@@ -314,8 +345,6 @@ unsigned long end_time = 0;
 void loop() {
 
     //read read_pin to see if arduino is sending data    
-    read_val = digitalRead( READ_PIN );
-    end_time = millis();
     digitalWrite( WIFI_ON, HIGH );
 
     //check that your connected and attempt to reconnect if not
@@ -329,6 +358,7 @@ void loop() {
       //if connected, stay connected
       client.loop();
       sendData();
+      Serial.println( "connected" );/*
       time_t now = time(nullptr);
        struct tm* p_tm = localtime(&now);
        Hourminsec = p_tm->tm_sec;
@@ -336,7 +366,7 @@ void loop() {
        Hourminsec += p_tm->tm_hour*10000;
        Yearmonthdate = p_tm->tm_mday;
        Yearmonthdate += (p_tm->tm_mon + 1)*100;
-       Yearmonthdate += (p_tm->tm_year + 1900)*10000;
+       Yearmonthdate += (p_tm->tm_year + 1900)*10000;*/
       delay( 100 );
       //LED indicates write is occurring
       digitalWrite( LED_PIN, HIGH );
@@ -347,12 +377,15 @@ void loop() {
         // read the oldest byte in the serial buffer:
         incomingString = Serial.readString();
         //check for prepending
-        if( incomingString[0] == 'D' && incomingString[1] == 'T' && incomingString[2] == 'A' )
+        if( incomingString.length() > 3 )
         {
-
-          //pjarse string and then send to AWS
-          parseString( incomingString );
-          sendData();
+          if( incomingString[0] == 'D' && incomingString[1] == 'T' && incomingString[2] == 'A' )
+          {
+  
+            //pjarse string and then send to AWS
+            parseString( incomingString );
+            sendData();
+          }
         }
       delay( 5000 );
       }

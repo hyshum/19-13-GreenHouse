@@ -9,6 +9,8 @@ dht DHTOUT;
 #define LED_PIN 7
 #define RELAY_PIN 6
 #define SOIL_PIN1 5
+#define SOIL_PIN2 4
+#define SOIL_PIN3 2
 //#define Soil_moisture_PIN A0  //Nodemcu: D7, Arduino: 1
 
 
@@ -20,6 +22,8 @@ double humidity;
 int on;
 int photoCellReading;
 int soilMoisture;
+int soilMoisture2;
+int soilMoisture3;
 
 unsigned long StartTime;
 unsigned long FinishTime;
@@ -104,6 +108,8 @@ void loop() {
 
   //read soil moisture reading
   soilMoisture = analogRead( SOIL_PIN1 );
+  soilMoisture2 = analogRead( SOIL_PIN2 );
+  soilMoisture3 = analogRead( SOIL_PIN3 );
   //check READ_PIN again to ensure no bus fight
 
     //
@@ -126,6 +132,10 @@ void loop() {
     toSend += humidity;
     toSend += ";";
     toSend += soilMoisture;
+    toSend += ";";
+    toSend += soilMoisture2;
+    toSend += ";";
+    toSend += soilMoisture3;
     toSend += ";";
 
     //send over serial connection

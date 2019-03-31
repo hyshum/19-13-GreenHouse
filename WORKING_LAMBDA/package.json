@@ -50,6 +50,7 @@
     "oauth-sign": "~0.9.0",
     "performance-now": "^2.1.0",
     "qs": "~6.5.2",
+    "requests": "^0.2.2",
     "safe-buffer": "^5.1.2",
     "tough-cookie": "~2.5.0",
     "tunnel-agent": "^0.6.0",
