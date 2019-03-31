@@ -1,14 +1,5 @@
-//This function send warning message if the temperature is too low or too high
+//Record the time that the heater is on 
 
-//If temperature in the greenhouse > highest_temperature
-//Send the alarm
-//Else if temperature in the greenhouse < lowest_temperature
-//Send the alarm
-//Else
-
-//If Specifictime(input on web, time that the client wants to receive the update)> last_time && Specifictime < current_time
-//If Date = Week_number(input on web, the day in a week that the client wants to receive the update)
-//Send the regular update
 
 'use strict';
 
@@ -34,13 +25,16 @@ exports.handler = (event, context, callback) => {
                     console.log(Last_time);
                     Read_Heater_current(function (Heater_current) {
                         console.log(Heater_current);
-                        Read_IOT_Data(event, function (IOT_data) {
-                            console.log(IOT_data);
-                            Write_Item_dynamoDB(IOT_data);
-                            Write_Current_time(IOT_data[1]);
-                            Send_Update_Message(IOT_data, Highest_temperature, Lowest_temperature, context, Last_time, Specific_time);
-                            Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature, context);
-                            Switching_On_OFF(IOT_data, Lowest_temperature,Heater_current);
+                        Read_Heater_runningtime(function (Heater_runningtime) {
+                            Read_IOT_Data(event, function (IOT_data) {
+                                console.log(IOT_data);
+                                Count_Heater(Heater_current, Last_time, IOT_data,Heater_runningtime);
+                                Write_Item_dynamoDB(IOT_data);
+                                Write_Current_time(IOT_data[1]);
+                                Send_Update_Message(IOT_data, Highest_temperature, Lowest_temperature, context, Last_time, Specific_time);
+                                Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature, context);
+                                Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current);
+                            });
                         });
                     });
                 });
@@ -156,6 +150,27 @@ function Read_Heater_current(callback) {
     });
 }
 
+function Read_Heater_runningtime(callback) {
+    var params_Heater_runningtime = {
+        TableName: 'GreenhouseDatabase',
+        Key: {
+            'reported': { S: 'Heater_runningtime' },
+            'index': { S: '0001' },
+        }
+    };
+    ddb.getItem(params_Heater_runningtime, function (err, data, response) {
+        if (err) {
+            console.log("Error Reading Heater_runningtime", err);
+        }
+        else {
+            console.log("Success Reading Heater_runningtime");
+            var Jsondata = JSON.stringify(data, null, 2);
+            var Heater_runningtime = JSON.parse(Jsondata).Item.value.N;
+            return callback(Heater_runningtime);
+        }
+    });
+}
+
 function Read_IOT_Data(event, callback) {
     var datapackage = JSON.stringify(event, null, 2);
     console.log('Data Receved from IOT');
@@ -225,6 +240,24 @@ function Write_Heater_current(Heater_current) {
             console.log("Error Writing Heater_current", err);
         } else {
             console.log("Success Writing Heater_current");
+        }
+    });
+}
+
+function Update_Heater_runningtime(Heater_runningtime) {
+    var params_Heater_runningtime = {
+        TableName: 'GreenhouseDatabase',
+        Item: {
+            'reported': { S: 'Heater_runningtime' },
+            'index': { S: '0001' },
+            'value': { N: Heater_runningtime.toString() }
+        }
+    };
+    ddb.putItem(params_Heater_runningtime, function (err, data) {
+        if (err) {
+            console.log("Error Writing Heater_runningtime", err);
+        } else {
+            console.log("Success Writing Heater_runningtime");
         }
     });
 }
@@ -325,7 +358,7 @@ function Switch_OFF() {
     });
 }
 
-function Switching_On_OFF(IOT_data, Lowest_temperature,Heater_current) {
+function Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current) {
     var Temperature_inside = IOT_data[2];
     var Heater_next;
     if (Temperature_inside < Lowest_temperature && Heater_current == 0) {
@@ -334,7 +367,7 @@ function Switching_On_OFF(IOT_data, Lowest_temperature,Heater_current) {
         Heater_next = 1;
         Write_Heater_current(Heater_next);
     }
-    else if (Temperature_inside > Lowest_temperature && Heater_current == 1 ) {
+    else if (Temperature_inside > Lowest_temperature && Heater_current == 1) {
         //Switch_OFF();
         console.log('Switch Heater Off');
         Heater_next = 0;
@@ -344,3 +377,12 @@ function Switching_On_OFF(IOT_data, Lowest_temperature,Heater_current) {
     }
 }
 
+
+function Count_Heater(Heater_current, Last_time, IOT_data,Heater_runningtime) {
+    var Time = IOT_data[1];
+    Var 
+    if (Heater_current == 1) {
+        Heater_runningtime += Time - Last_time;
+        Update_Heater_runningtime(Heater_runningtime);
+    }
+}

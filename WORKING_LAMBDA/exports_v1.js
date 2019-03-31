@@ -1,14 +1,5 @@
-//This function send warning message if the temperature is too low or too high
+//Turn on the heater if the temperature is too low
 
-//If temperature in the greenhouse > highest_temperature
-//Send the alarm
-//Else if temperature in the greenhouse < lowest_temperature
-//Send the alarm
-//Else
-
-//If Specifictime(input on web, time that the client wants to receive the update)> last_time && Specifictime < current_time
-//If Date = Week_number(input on web, the day in a week that the client wants to receive the update)
-//Send the regular update
 
 'use strict';
 
