@@ -153,7 +153,10 @@ function Read_IOT_Data(event, callback) {
     var Temperature_inside = JSON.parse(datapackage).reported.Temperature_inside;
     var Temperature_outside = JSON.parse(datapackage).reported.Temperature_outside;
     var Humidmity = JSON.parse(datapackage).reported.Humidity;
-    var IOT_data = [Date, Time, Temperature_inside, Temperature_outside, Humidmity];
+    var Soil_Moisture_1 = JSON.parse(datapackage).reported.Soil_Moisture1;
+    var Soil_Moisture_2 = JSON.parse(datapackage).reported.Soil_Moisture2;
+    var Soil_Moisture_3 = JSON.parse(datapackage).reported.Soil_Moisture3; 
+    var IOT_data = [Date, Time, Temperature_inside, Temperature_outside, Humidmity,Soil_Moisture_1,Soil_Moisture_2,Soil_Moisture_3];
     return callback(IOT_data);
 }
 
@@ -169,7 +172,10 @@ function Write_Item_dynamoDB(IOT_data) {
             'Time': { N: IOT_data[1].toString() },
             'Temperature_inside': { N: IOT_data[2].toString() },
             'Temperature_outside': { N: IOT_data[3].toString() },
-            'Humidmity': { N: IOT_data[4].toString() }
+            'Humidmity': { N: IOT_data[4].toString() },
+            'Soil_Moisture_1' :{N: IOT_data[5].toString()},
+            'Soil_Moisture_2' :{N: IOT_data[6].toString()},
+            'Soil_Moisture_3' :{N: IOT_data[7].toString()}
         }
     };
     ddb.putItem(params_IOT_data, function (err, data) {
