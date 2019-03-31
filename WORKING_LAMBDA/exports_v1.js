@@ -6,8 +6,6 @@
 console.log('Loading function');
 var AWS = require("aws-sdk");
 //const request = require('request');
-var highest;
-var Lowest;
 //Readfrom DB
 AWS.config.update({ region: 'us-east-1' });
 var ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
@@ -30,7 +28,7 @@ exports.handler = (event, context, callback) => {
                             Write_Item_dynamoDB(IOT_data);
                             Write_Current_time(IOT_data[1]);
                             Send_Update_Message(IOT_data, Highest_temperature, Lowest_temperature, context, Last_time, Specific_time);
-                            Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature, context);
+                           // Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature, context);
                             Switching_On_OFF(IOT_data, Lowest_temperature,Heater_current);
                         });
                     });
@@ -150,9 +148,9 @@ function Read_Heater_current(callback) {
 function Read_IOT_Data(event, callback) {
     var datapackage = JSON.stringify(event, null, 2);
     console.log('Data Receved from IOT');
-    var Date = 20190327;//JSON.parse(datapackage).reported.Date;
-    var Time = 220000;//JSON.parse(datapackage).reported.Time;
-    var Temperature_inside = 500;//JSON.parse(datapackage).reported.Temperature_inside;
+    var Date = 20190331;//JSON.parse(datapackage).reported.Date;
+    var Time = 220010;//JSON.parse(datapackage).reported.Time;
+    var Temperature_inside = 70;//JSON.parse(datapackage).reported.Temperature_inside;
     var Temperature_outside = 1000;//JSON.parse(datapackage).reported.Temperature_outside;
     var Humidmity = 1000;// JSON.parse(datapackage).reported.Humidity;
     var IOT_data = [Date, Time, Temperature_inside, Temperature_outside, Humidmity];
@@ -234,31 +232,33 @@ function Send_Update_Message(IOT_data, Highest_temperature, Lowest_temperature, 
     var message6 = 'Lowest Temperature is ' + Lowest_temperature + '\n';
     var messageupdate = message1 + message2 + message3 + message4 + message5 + message6;
 
-    // var messagewarning_temperature_too_low = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
-    // messagewarning_temperature_too_low += ' degrees, it is lower than the lowest desired temperature.\n';
+    var messagewarning_temperature_too_low = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
+    
+    var messagewarning_temperature_too_high = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
 
-    // var messagewarning_temperature_too_high = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
-    // messagewarning_temperature_too_high += ' degrees, it is higher than the highest desired temperature.\n';
 
-    // var messagesent;
-    // if (Temperature_inside < Lowest_temperature) {
-    //     messagesent = messagewarning_temperature_too_low;
-    // }
-    // else if (Temperature_inside > Highest_temperature) {
-    // messagesent = messagewarning_temperature_too_high;
-    //  }
-    // else {
-    //     messagesent = messageupdate;
-    // }
+    var messagesent;
+    if (Temperature_inside < Lowest_temperature) {
+        messagesent = messagewarning_temperature_too_low;
+    }
+    else if (Temperature_inside > Highest_temperature) {
+    messagesent = messagewarning_temperature_too_high;
+     }
+    else {
+        messagesent = messageupdate;
+     }
 
     var sns = new AWS.SNS();
     var params = {
-        Message: messageupdate,
+        Message: messagesent,
         TopicArn: "arn:aws:sns:us-east-1:812365191913:GreenhouseTemAlert"
     };
-    if (Specific_time > Last_time && Specific_time < Time) {
+
+    if (Specific_time > Last_time && Specific_time < Time){
+        console.log(messagesent);
         sns.publish(params, context.done);
     }
+
     //SendMessage-END
 }
 
@@ -299,21 +299,21 @@ function Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature,
 function Switch_On() {
     console.log('Running Switch');
     const option = 'https://maker.ifttt.com/trigger/ec464greenhouseON/with/key/cvJYmevJ910Cxw7Zr5Y6Ac';
-    request(option, function (error, response, body) {
-        console.log('error:', error); // Print the error if one occurred
-        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-        console.log('body:', body); // Print the HTML for the Google homepage.
-    });
+    // request(option, function (error, response, body) {
+    //     console.log('error:', error); // Print the error if one occurred
+    //     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    //     console.log('body:', body); // Print the HTML for the Google homepage.
+    // });
 }
 
 function Switch_OFF() {
     console.log('Running Switch');
     const option = 'https://maker.ifttt.com/trigger/ec464greenhouseOFF/with/key/cvJYmevJ910Cxw7Zr5Y6Ac';
-    request(option, function (error, response, body) {
-        console.log('error:', error); // Print the error if one occurred
-        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-        console.log('body:', body); // Print the HTML for the Google homepage.
-    });
+    // request(option, function (error, response, body) {
+    //     console.log('error:', error); // Print the error if one occurred
+    //     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+    //     console.log('body:', body); // Print the HTML for the Google homepage.
+    // });
 }
 
 function Switching_On_OFF(IOT_data, Lowest_temperature,Heater_current) {
