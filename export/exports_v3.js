@@ -395,7 +395,7 @@ function Read_Heater_runningtime(Month, callback) {
     });
 }
 
-function Decide_month(IOT_data, function (Month) {
+function Decide_month(IOT_data, callback) {
     var DateYMD = IOT_data[0];
     var DateYMD_chars = DateYMD.split('');
     var Month_number = DateYMD_chars[4] + DateYMD_chars[5];
@@ -425,15 +425,24 @@ function Decide_month(IOT_data, function (Month) {
         case '08':
             Month = 'Aug';
             break;
+        case '09':
+            Month = 'Sep';
+            break;        
+        case '10':
+            Month = 'Oct';
+            break;
+        case '11':
+            Month = 'Nov';
+            break;        
+        case '12':
+            Month = 'Dec';
+            break;
         default:
             console.log('Wrong Month Number');
     }
     return callback(Month);
 
 }
-
-function Read_Power_consumption_month(Month)
-
 
 function Read_IOT_Data(event, callback) {
     var datapackage = JSON.stringify(event, null, 2);
