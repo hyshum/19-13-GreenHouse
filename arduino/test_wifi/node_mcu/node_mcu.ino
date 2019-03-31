@@ -11,11 +11,9 @@
 
 uint8_t DST = 0;
 const int MQTT_PORT = 8883;
-const char MQTT_SUB_TOPIC[] = "$aws/things/Greenhouse_project/shadow/update";
-const char MQTT_PUB_TOPIC[] = "$aws/things/Greenhouse_project/shadow/update";
-
+const char MQTT_SUB_TOPIC[] = "$aws/things/Greenhouse_final/shadow/update";
+const char MQTT_PUB_TOPIC[] = "$aws/things/Greenhouse_final/shadow/update";
 int threshold_temperature = 80;
-
 //int soil_moisture = 10;
 
 
@@ -43,7 +41,8 @@ unsigned long RunningTime;
 unsigned long TotalRunningTime = 0;
 int heaterindex = 0;
 int Warning_temperture_low = 0;
-
+int Hourminsec = 0;
+int Yearmonthdate = 0;
 unsigned long startTimeout;
 unsigned long endTimeout;
 unsigned long timeout = 30000;
@@ -205,15 +204,20 @@ void checkWiFiThenReboot(void)
 void sendData(void)
 {
   //assign all elements to json document and then send to MQTT
-  DynamicJsonDocument jsonBuffer(1024);
+  DynamicJsonDocument jsonBuffer(4096);
   JsonObject root = jsonBuffer.to<JsonObject>();
   JsonObject state = root.createNestedObject("state");
   JsonObject state_reported = state.createNestedObject("reported");
-  state_reported["tmpi"] = temp;
-  state_reported["tmpo"] = tempOutF;
-  state_reported["mdy"] = humidity;
-  state_reported["lt"] = photoCellReading;
-  state_reported["sm1"] = soilCorrected;  
+  state_reported["Time"] = Hourminsec;
+  state_reported["Date"] = Yearmonthdate;
+  state_reported["Temperature_inside"] = temp;
+  state_reported["Temperature_outisde"] = tempOutF;
+  state_reported["Humidity"] = humidity;
+  state_reported["Light"] = photoCellReading;
+  state_reported["Soil_Moisture1"] = soilCorrected;
+  state_reported["Soil_Moisture2"] = soilCorrected;  
+  state_reported["Soil_Moisture3"] = soilCorrected;  
+
   char shadow[measureJson(root) + 1];
   serializeJson(root, shadow, sizeof(shadow));
   if (!client.publish(MQTT_PUB_TOPIC, shadow, false, 0))
@@ -254,7 +258,6 @@ void setup() {
   client.onMessage( messageReceived );
 
   connectToMqtt();
-  
   delay( 500 );
 }
 
@@ -322,9 +325,18 @@ void loop() {
     }
     else
     {
+       
       //if connected, stay connected
       client.loop();
-     
+      sendData();
+      time_t now = time(nullptr);
+       struct tm* p_tm = localtime(&now);
+       Hourminsec = p_tm->tm_sec;
+       Hourminsec += p_tm->tm_min*100;
+       Hourminsec += p_tm->tm_hour*10000;
+       Yearmonthdate = p_tm->tm_mday;
+       Yearmonthdate += (p_tm->tm_mon + 1)*100;
+       Yearmonthdate += (p_tm->tm_year + 1900)*10000;
       delay( 100 );
       //LED indicates write is occurring
       digitalWrite( LED_PIN, HIGH );
