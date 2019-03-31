@@ -351,13 +351,13 @@ function Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current) {
     var Temperature_inside = IOT_data[2];
     var Heater_next;
     if (Temperature_inside < Lowest_temperature && Heater_current == 0) {
-        //Switch_On();
+        Switch_On();
         console.log('Switch Heater On');
         Heater_next = 1;
         Write_Heater_current(Heater_next);
     }
     else if (Temperature_inside > Lowest_temperature && Heater_current == 1) {
-        //Switch_OFF();
+        Switch_OFF();
         console.log('Switch Heater Off');
         Heater_next = 0;
         Write_Heater_current(Heater_next);
