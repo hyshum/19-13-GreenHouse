@@ -23,12 +23,13 @@ exports.handler = (event, context, callback) => {
                         Read_Last_time(function (Last_time) {
                             Read_Heater_runningtime(Month, function (Heater_runningtime) {
                                 Read_Heater_current(function (Heater_current) {
+                                    Write_Item_dynamoDB(IOT_data);
+                                    Write_Current_time(IOT_data[1]);
+                                    Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current);
                                     Count_Heater(Month, Heater_current, parseInt(Last_time, 10), IOT_data, parseInt(Heater_runningtime, 10), function(Heater_runningtime_total) {
-                                        Write_Item_dynamoDB(IOT_data);
-                                        Write_Current_time(IOT_data[1]);
                                         Send_Update_Message(Heater_runningtime_total, Month, IOT_data, Highest_temperature, Lowest_temperature, context, Last_time, Specific_time);
                                         // Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature, context);
-                                        Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current);
+                                    
                                     })
                                 })
                             });
@@ -147,17 +148,6 @@ function Read_Heater_current(callback) {
     });
 }
 
-function Read_IOT_Data(event, callback) {
-    var datapackage = JSON.stringify(event, null, 2);
-    console.log('Data Receved from IOT');
-    var Date = 20190331;//JSON.parse(datapackage).reported.Date;
-    var Time = 220010;//JSON.parse(datapackage).reported.Time;
-    var Temperature_inside = 70;//JSON.parse(datapackage).reported.Temperature_inside;
-    var Temperature_outside = 1000;//JSON.parse(datapackage).reported.Temperature_outside;
-    var Humidmity = 1000;// JSON.parse(datapackage).reported.Humidity;
-    var IOT_data = [Date, Time, Temperature_inside, Temperature_outside, Humidmity];
-    return callback(IOT_data);
-}
 
 
 
@@ -258,7 +248,6 @@ function Send_Update_Message(Heater_runningtime_total, Month, IOT_data, Highest_
     };
 
     if (Specific_time > Last_time && Specific_time < Time) {
-        console.log(messagesent);
         sns.publish(params, context.done);
     }
 
@@ -267,14 +256,11 @@ function Send_Update_Message(Heater_runningtime_total, Month, IOT_data, Highest_
 
 function Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature, context) {
     var Temperature_inside = IOT_data[2];
-
     var index = 0;
     var messagewarning_temperature_too_low = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
     messagewarning_temperature_too_low += ' degrees, it is lower than the lowest desired temperature.\n';
-
     var messagewarning_temperature_too_high = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
     messagewarning_temperature_too_high += ' degrees, it is higher than the highest desired temperature.\n';
-
     var messagesent;
     if (Temperature_inside < Lowest_temperature) {
         messagesent = messagewarning_temperature_too_low;
@@ -287,8 +273,6 @@ function Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature,
     else {
         index = 0;
     }
-
-
     var sns = new AWS.SNS();
     var params = {
         Message: messagesent,
@@ -342,27 +326,24 @@ function Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current) {
 
 function Count_Heater(Month, Heater_current, Last_time, IOT_data, Heater_runningtime,callback) {
     var Time = parseInt(IOT_data[1], 10);
-    var Heater_runningtime_total;
+    var Heater_runningtime_total = Heater_runningtime;
     if (Heater_current == 1) {
-        console.log(Last_time);
-        console.log(Time);
-        console.log(Heater_runningtime);
         Heater_runningtime_total = Heater_runningtime + (Time - Last_time);
-        console.log(Heater_runningtime_total);
         Update_Heater_runningtime(Month, Heater_runningtime_total);
-        return callback(Heater_runningtime_total);
     }
+    return callback(Heater_runningtime_total);
 }
 
-function Update_Heater_runningtime(Month, Heater_runningtime) {
+function Update_Heater_runningtime(Month, Heater_runningtime_total) {
     var params_Heater_runningtime = {
         TableName: 'GreenhouseDatabase',
         Item: {
             'reported': { S: 'Power_consumption_' + Month },
             'index': { S: '0001' },
-            'value': { N: Heater_runningtime.toString() }
+            'value': { N: Heater_runningtime_total.toString() }
         }
     };
+    console.log('Power_consumption_' + Month )
     ddb.putItem(params_Heater_runningtime, function (err, data) {
         if (err) {
             console.log("Error Writing Heater_runningtime", err);
@@ -396,7 +377,7 @@ function Read_Heater_runningtime(Month, callback) {
 }
 
 function Decide_month(IOT_data, callback) {
-    var DateYMD = IOT_data[0];
+    var DateYMD = IOT_data[0].toString();
     var DateYMD_chars = DateYMD.split('');
     var Month_number = DateYMD_chars[4] + DateYMD_chars[5];
     var Month;
@@ -447,8 +428,8 @@ function Decide_month(IOT_data, callback) {
 function Read_IOT_Data(event, callback) {
     var datapackage = JSON.stringify(event, null, 2);
     console.log('Data Receved from IOT');
-    var Date = 20190403;//JSON.parse(datapackage).reported.Date;
-    var Time = 120010;//JSON.parse(datapackage).reported.Time;
+    var Date = 20190406;//JSON.parse(datapackage).reported.Date;
+    var Time = 170000;//JSON.parse(datapackage).reported.Time;
     var Temperature_inside = 70;//JSON.parse(datapackage).reported.Temperature_inside;
     var Temperature_outside = 1000;//JSON.parse(datapackage).reported.Temperature_outside;
     var Humidmity = 1000;// JSON.parse(datapackage).reported.Humidity;
