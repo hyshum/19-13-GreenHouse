@@ -12,11 +12,35 @@ var ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
 //Readfrom DB
 
 exports.handler = (event, context, callback) => {
-
+    var today = new Date();
+    var Year = today.getFullYear().toString();
+    var Month = today.getMonth();
+    var Day = today.getDate();
+    var Hour = today.getHours() - 4;
+    var Minute = today.getMinutes();
+    var Second = today.getSeconds();
+    if (Month.toString().length == 1) {
+        Month = '0' + (Month + 1).toString();
+    }
+    if (Day.toString().length == 1) {
+        Day = '0' + (Day).toString();
+    }
+    if (Hour.toString().length == 1) {
+        Hour = '0' + (Hour).toString();
+    }
+    if (Minute.toString().length == 1) {
+        Minute = '0' + (Minute).toString();
+    }
+    if (Second.toString().length == 1) {
+        Second = '0' + (Second).toString();
+    }
+    var YMD = Year.toString()+Month.toString()+Day.toString();
+    var HMS = Hour.toString()+Minute.toString()+Second.toString();
+    
     Read_Lowest_temperature(function (Lowest_temperature) {
         Read_Highest_temperature(function (Highest_temperature) {
             Read_Specific_time(function (Specific_time) {
-                Read_IOT_Data(event, function (IOT_data) {
+                Read_IOT_Data(event, YMD, HMS, function (IOT_data) {
                     Decide_month(IOT_data, function (Month) {
                         Read_Last_time(function (Last_time) {
                             Read_Heater_runningtime(Month, function (Heater_runningtime) {
@@ -280,7 +304,6 @@ function Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature,
         sns.publish(params, context.done);
     }
 }
-
 function Switch_On() {
     console.log('Running Switch');
     const option = 'https://maker.ifttt.com/trigger/ec464greenhouseON/with/key/cvJYmevJ910Cxw7Zr5Y6Ac';
@@ -290,7 +313,6 @@ function Switch_On() {
     //     console.log('body:', body); // Print the HTML for the Google homepage.
     // });
 }
-
 function Switch_OFF() {
     console.log('Running Switch');
     const option = 'https://maker.ifttt.com/trigger/ec464greenhouseOFF/with/key/cvJYmevJ910Cxw7Zr5Y6Ac';
@@ -300,7 +322,6 @@ function Switch_OFF() {
     //     console.log('body:', body); // Print the HTML for the Google homepage.
     // });
 }
-
 function Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current) {
     var Temperature_inside = IOT_data[2];
     var Heater_next;
@@ -319,9 +340,6 @@ function Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current) {
     else {
     }
 }
-
-
-
 function Count_Heater(Month, Heater_current, Last_time, IOT_data, Heater_runningtime,callback) {
     var Time = parseInt(IOT_data[1], 10);
     var Heater_runningtime_total = Heater_runningtime;
@@ -351,8 +369,6 @@ function Update_Heater_runningtime(Month, Heater_runningtime_total) {
     });
 }
 
-
-
 function Read_Heater_runningtime(Month, callback) {
     var params_Heater_runningtime = {
         TableName: 'GreenhouseDatabase',
@@ -373,7 +389,6 @@ function Read_Heater_runningtime(Month, callback) {
         }
     });
 }
-
 function Decide_month(IOT_data, callback) {
     var DateYMD = IOT_data[0].toString();
     var DateYMD_chars = DateYMD.split('');
@@ -422,7 +437,6 @@ function Decide_month(IOT_data, callback) {
     return callback(Month);
 
 }
-
 function Read_IOT_Data(event, callback) {
     var datapackage = JSON.stringify(event, null, 2);
     console.log('Data Receved from IOT');
