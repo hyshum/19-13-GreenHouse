@@ -11,8 +11,8 @@
 
 uint8_t DST = 0;
 const int MQTT_PORT = 8883;
-const char MQTT_SUB_TOPIC[] = "$aws/things/greenhouse/shadow/update";
-const char MQTT_PUB_TOPIC[] = "$aws/things/greenhouse/shadow/update";
+const char MQTT_SUB_TOPIC[] = "$aws/things/Greenhouse_project/shadow/update";
+const char MQTT_PUB_TOPIC[] = "$aws/things/Greenhouse_project/shadow/update";
 
 int threshold_temperature = 80;
 
@@ -324,71 +324,28 @@ void loop() {
     {
       //if connected, stay connected
       client.loop();
+     
+      delay( 100 );
+      //LED indicates write is occurring
+      digitalWrite( LED_PIN, HIGH );
 
-      //time how long between last time data was sent and now
-      if( end_time - start_time > 1000000 )
+      if (Serial.available() > 0) 
       {
-          start_time = end_time;
-          changeTemp = 1;
-      }
-
-      //change threshold temperature on arduino
-      //may be removed if we decide to go with smart outlet
-      //hard coded threshold temp for now
-      //in future will be changed from web app
-      if( changeTemp == 1 && !read_val )
-      {
-        digitalWrite( WRITE_PIN, HIGH );
-        delay( 5000 );
-        String tmpString = "TMP";
-        tmpString += threshold_temperature;
-        Serial.print( tmpString );
-        digitalWrite( LED_PIN, LOW );
-        changeTemp = false;
-        digitalWrite( WRITE_PIN, LOW );
-        delay( 5000 );
-      }
-
-      //if Arduino is attempting to write
-      else if( read_val == 1 )
-      {
-        //delay
-        delay( 100 );
-        //LED indicates write is occurring
-        digitalWrite( LED_PIN, HIGH );
-
-        startTimeout = millis();        
-        //read from Serial port
-        while( true )
+      
+        // read the oldest byte in the serial buffer:
+        incomingString = Serial.readString();
+        //check for prepending
+        if( incomingString[0] == 'D' && incomingString[1] == 'T' && incomingString[2] == 'A' )
         {
-          endTimeout = millis();
-          if( endTimeout - startTimeout > timeout )
-          {
-            break;
-          }
-          if (Serial.available() > 0) 
-          {
-          
-            // read the oldest byte in the serial buffer:
-            incomingString = Serial.readString();
-            //check for prepending
-            if( incomingString[0] == 'D' && incomingString[1] == 'T' && incomingString[2] == 'A' )
-            {
 
-              //pjarse string and then send to AWS
-              parseString( incomingString );
-              sendData();
-              break;
-            }
-          delay( 5000 );
-          }
-         
+          //pjarse string and then send to AWS
+          parseString( incomingString );
+          sendData();
         }
+      delay( 5000 );
       }
-      else
-      { 
-        //turn LED off if not reading from arduino
-        digitalWrite( LED_PIN, LOW );
-      }
-    }
+      
+  }
+    
+    
 }

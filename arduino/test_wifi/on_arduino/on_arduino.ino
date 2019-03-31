@@ -80,133 +80,61 @@ void parseString( String input )
 
 void loop() {
 
-  //read_val is 1 when nodeMCU writes to Arduino, check
-  read_val = digitalRead( READ_PIN );
-  end_time = millis();
-  
-  if( read_val == 1 )
-  {
-      startTimeout = millis();
-      //turn on LED to indicate reading from nodeMCU
-      digitalWrite( LED_PIN, HIGH );
-      digitalWrite( WRITE_PIN, LOW );
-      //digitalWrite( LED_PIN, HIGH ); 
-      delay( 100 );
-      while( true )
-      {
+  //turn on LED to indicate reading from nodeMCU
+  digitalWrite( LED_PIN, HIGH );
+  digitalWrite( WRITE_PIN, LOW );
+  //digitalWrite( LED_PIN, HIGH ); 
+  delay( 100 );
+  digitalWrite( LED_PIN, LOW );
+  toSend = "";
 
-        endTimeout = millis();
-        if( endTimeout - startTimeout > timeout )
-        {
-          break;
-        }
-        //read string from nodeMCU
-        if( Serial.available() > 0 )
-        {
-          //"TMP" prepended to spring to indicate correct reading
-          //useful for error correction
-          newTemp = Serial.readString();
-          if( newTemp[0] == 'T' && newTemp[1] == 'M' && newTemp[2] == 'P' )
-          {
-            digitalWrite( LED_PIN, HIGH ); 
-            parseString( newTemp );
-            break;
-          }
-        }
-      }
-  }
+  //read outside temperature sensor
+  chkOut = DHTOUT.read11( DHT11_OUT );
+  tempOutF = DHTOUT.temperature * 1.8 + 32;
 
-  //if nodeMCU is NOT attempting to write, read from sensors
-  else 
-  {
-    digitalWrite( LED_PIN, LOW );
-    delay( 5000 );
-    toSend = "";
+  //read inside temperature sensor
+  chk = DHTIN.read11( DHT11_PIN );
+  temp = DHTIN.temperature * 1.8 + 32;
 
-    //read outside temperature sensor
-    chkOut = DHTOUT.read11( DHT11_OUT );
-    tempOutF = DHTOUT.temperature * 1.8 + 32;
+  //read inside humidity
+  humidity = DHTIN.humidity;
 
-    //read inside temperature sensor
-    chk = DHTIN.read11( DHT11_PIN );
-    temp = DHTIN.temperature * 1.8 + 32;
+  //read photocell reading
+  photoCellReading = analogRead( LIGHT_PIN );
 
-    //read inside humidity
-    humidity = DHTIN.humidity;
-
-    //read photocell reading
-    photoCellReading = analogRead( LIGHT_PIN );
-
-    //read soil moisture reading
-    soilMoisture = analogRead( SOIL_PIN1 );
-
-    //activate relay if temperature is above threshold_temperature
-    if ( temp > threshold_temperature )
-    {
-      //if temperature is above threshold temperature, turn relay off and turn LED off
-      digitalWrite(RELAY_PIN, HIGH );
-  
-      Warning_temperture_low = 0;
-       
-      if (heaterindex == 1) 
-      {
-        RunningTime = FinishTime - StartTime;
-        TotalRunningTime += RunningTime;
-        heaterindex = 0;
-      }
-      //time how long relay has been activated
-      StartTime = millis();
-    }
-
-    else if ( temp <= threshold_temperature )
-    {
-      //if temperature is below threshold temperature, turn on relay and turn LED on
-      if (temp + 20 < threshold_temperature)
-          Warning_temperture_low = 1;
-      else  
-          Warning_temperture_low = 0;
-      
-      heaterindex = 1;
-      FinishTime = millis();
-      digitalWrite(RELAY_PIN,LOW);   
-    }
-
-    //check READ_PIN again to ensure no bus fight
-    bool check = digitalRead( READ_PIN );
+  //read soil moisture reading
+  soilMoisture = analogRead( SOIL_PIN1 );
+  //check READ_PIN again to ensure no bus fight
 
     //
-    if( end_time - begin_time > 10000 && !check )
-    {
-      begin_time = end_time;
-      digitalWrite( LED_PIN, LOW );
-      //turn WRITE_PIN on to indicate writing to nodeMCU
-      digitalWrite( WRITE_PIN, HIGH );
+    
+    digitalWrite( LED_PIN, LOW );
+    //turn WRITE_PIN on to indicate writing to nodeMCU
+    digitalWrite( WRITE_PIN, HIGH );
 
-      //delay so nodeMCU has time to read correct pin value
-      delay( 5000 );
-      
-      //prepend "DTA" to indicate successful transmission and not garbage
-      //use semicolon as token to parse string
-      toSend += "DTA";
-      toSend += temp;
-      toSend += ";";
-      toSend += tempOutF;
-      toSend += ";";
-      toSend += photoCellReading;
-      toSend += ";";
-      toSend += humidity;
-      toSend += ";";
-      toSend += soilMoisture;
-      toSend += ";";
+    //delay so nodeMCU has time to read correct pin value
+    
+    //prepend "DTA" to indicate successful transmission and not garbage
+    //use semicolon as token to parse string
+    toSend += "DTA";
+    toSend += temp;
+    toSend += ";";
+    toSend += tempOutF;
+    toSend += ";";
+    toSend += photoCellReading;
+    toSend += ";";
+    toSend += humidity;
+    toSend += ";";
+    toSend += soilMoisture;
+    toSend += ";";
 
-      //send over serial connection
-      Serial.print( toSend );
+    //send over serial connection
+    Serial.print( toSend );
 
-      //turn off write pin
-      digitalWrite( WRITE_PIN, LOW );
+    //turn off write pin
+    digitalWrite( WRITE_PIN, LOW );
 
-      //delay
-      delay( 5000 );
-    }
-  }
+    //delay
+    delay( 5000 );
+    
 }
