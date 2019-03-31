@@ -156,7 +156,10 @@ function Write_Item_dynamoDB(IOT_data) {
             'Time': { N: IOT_data[1].toString() },
             'Temperature_inside': { N: IOT_data[2].toString() },
             'Temperature_outside': { N: IOT_data[3].toString() },
-            'Humidmity': { N: IOT_data[4].toString() }
+            'Humidmity': { N: IOT_data[4].toString() },
+            'Soil_Moisture_1' :{N: IOT_data[5].toString()},
+            'Soil_Moisture_2' :{N: IOT_data[6].toString()},
+            'Soil_Moisture_3' :{N: IOT_data[7].toString()}
         }
     };
     ddb.putItem(params_IOT_data, function (err, data) {
@@ -347,11 +350,36 @@ function Read_Heater_runningtime(callback) {
 function Read_IOT_Data(event, callback) {
     var datapackage = JSON.stringify(event, null, 2);
     console.log('Data Receved from IOT');
-    var Date = 20190403;//JSON.parse(datapackage).reported.Date;
-    var Time = 120010;//JSON.parse(datapackage).reported.Time;
-    var Temperature_inside = 70;//JSON.parse(datapackage).reported.Temperature_inside;
-    var Temperature_outside = 1000;//JSON.parse(datapackage).reported.Temperature_outside;
-    var Humidmity = 1000;// JSON.parse(datapackage).reported.Humidity;
-    var IOT_data = [Date, Time, Temperature_inside, Temperature_outside, Humidmity];
+    var today = new Date();
+    var Year = today.getFullYear().toString();
+    var Month = today.getMonth();
+    var Day = today.getDate();
+    var Hour = today.getHours() - 4;
+    var Minute = today.getMinutes();
+    var Second = today.getSeconds();
+    if (Month.toString().length == 1) {
+        Month = '0' + (Month + 1).toString();
+    }
+    if (Day.toString().length == 1) {
+        Day = '0' + (Day).toString();
+    }
+    if (Hour.toString().length == 1) {
+        Hour = '0' + (Hour).toString();
+    }
+    if (Minute.toString().length == 1) {
+        Minute = '0' + (Minute).toString();
+    }
+    if (Second.toString().length == 1) {
+        Second = '0' + (Second).toString();
+    }
+    var Date = Year+Month+Day;
+    var Time = Hour+Minute+Second;
+    var Temperature_inside = JSON.parse(datapackage).reported.Temperature_inside;
+    var Temperature_outside = JSON.parse(datapackage).reported.Temperature_outside;
+    var Humidmity = JSON.parse(datapackage).reported.Humidity;
+    var Soil_Moisture_1 = JSON.parse(datapackage).reported.Soil_Moisture1;
+    var Soil_Moisture_2 = JSON.parse(datapackage).reported.Soil_Moisture2;
+    var Soil_Moisture_3 = JSON.parse(datapackage).reported.Soil_Moisture3; 
+    var IOT_data = [Date, Time, Temperature_inside, Temperature_outside, Humidmity,Soil_Moisture_1,Soil_Moisture_2,Soil_Moisture_3];
     return callback(IOT_data);
 }
