@@ -361,7 +361,7 @@ function Update_Heater_runningtime(Month, Heater_runningtime_total) {
         Item: {
             'reported': { S: 'Power_consumption_' + Month },
             'index': { S: '0001' },
-            'val': { N: Heater_runningtime_total.toString() }
+            'value': { N: Heater_runningtime_total.toString() }
         }
     };
     ddb.putItem(params_Heater_runningtime, function (err, data) {
