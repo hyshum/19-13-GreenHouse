@@ -61,9 +61,6 @@ exports.handler = (event, context, callback) => {
             });
         });
     });
-
-
-
 }
 
 function Read_Lowest_temperature(callback) {
@@ -169,7 +166,6 @@ function Read_Heater_current(callback) {
         }
     });
 }
-
 
 
 
@@ -304,6 +300,7 @@ function Send_Warning_Message(IOT_data, Highest_temperature, Lowest_temperature,
         sns.publish(params, context.done);
     }
 }
+
 function Switch_On() {
     console.log('Running Switch');
     const option = 'https://maker.ifttt.com/trigger/ec464greenhouseON/with/key/cvJYmevJ910Cxw7Zr5Y6Ac';
@@ -313,6 +310,7 @@ function Switch_On() {
     //     console.log('body:', body); // Print the HTML for the Google homepage.
     // });
 }
+
 function Switch_OFF() {
     console.log('Running Switch');
     const option = 'https://maker.ifttt.com/trigger/ec464greenhouseOFF/with/key/cvJYmevJ910Cxw7Zr5Y6Ac';
@@ -322,6 +320,7 @@ function Switch_OFF() {
     //     console.log('body:', body); // Print the HTML for the Google homepage.
     // });
 }
+
 function Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current) {
     var Temperature_inside = IOT_data[2];
     var Heater_next;
@@ -340,6 +339,7 @@ function Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current) {
     else {
     }
 }
+
 function Count_Heater(Month, Heater_current, Last_time, IOT_data, Heater_runningtime,callback) {
     var Time = parseInt(IOT_data[1], 10);
     var Heater_runningtime_total = Heater_runningtime;
@@ -437,6 +437,7 @@ function Decide_month(IOT_data, callback) {
     return callback(Month);
 
 }
+
 function Read_IOT_Data(event, callback) {
     var datapackage = JSON.stringify(event, null, 2);
     console.log('Data Receved from IOT');
