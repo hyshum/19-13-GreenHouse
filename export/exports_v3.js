@@ -53,7 +53,7 @@ exports.handler = (event, context, callback) => {
                                         Read_Heater_current(function (Heater_current) {
                                             Write_Item_dynamoDB(IOT_data);
                                             Write_Current_time(IOT_data[1]);
-                                            Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current);
+                                            Switching_On_OFF(IOT_data, Lowest_temperature, Highest_temperature, Heater_current);
                                             Count_Heater(Month, Heater_current, parseInt(Last_time, 10), IOT_data, parseInt(Heater_runningtime, 10), function (Heater_runningtime_total) {
                                                 Send_Update_Message(IOT_data, context, Last_time, Specific_time,Heater_runningtime_total,Month);
                                             });
@@ -315,7 +315,7 @@ function Switch_OFF() {
     });
 }
 
-function Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current) {
+function Switching_On_OFF(IOT_data, Lowest_temperature, Highest_temperature, Heater_current) {
     var Temperature_inside = IOT_data[2];
     var Heater_next;
     if (Temperature_inside < Lowest_temperature && Heater_current == 0) {
@@ -332,29 +332,36 @@ function Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current) {
         Heater_next = 0;
         Write_Heater_current(Heater_next);
     }
-    else {
+    else if ( Temperature_inside > Highest_temperature) {
+        Send_High_Temperature_Message(Temperature_inside);
     }
 }
 
 
 function Send_Low_Temperature_Message(Temperature_inside) {
-
-
     var messagewarning_temperature_too_low = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
-
     var sns = new AWS.SNS();
     var params = {
         Message: messagewarning_temperature_too_low,
         TopicArn: "arn:aws:sns:us-east-1:812365191913:GreenhouseTemAlert"
     };
-
     sns.publish(params, function (err, data) {
         if (err) console.log(err, err.stack); // an error occurred
         else console.log('Sending Low Temperature Message');           // successful response
     });
+}
 
-
-
+function Send_High_Temperature_Message(Temperature_inside) {
+    var messagewarning_temperature_too_high = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
+    var sns = new AWS.SNS();
+    var params = {
+        Message: messagewarning_temperature_too_high,
+        TopicArn: "arn:aws:sns:us-east-1:812365191913:GreenhouseTemAlert"
+    };
+    sns.publish(params, function (err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else console.log('Sending High Temperature Message');           // successful response
+    });
 }
 
 function Count_Heater(Month, Heater_current, Last_time, IOT_data, Heater_runningtime,callback) {
