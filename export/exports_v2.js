@@ -172,7 +172,7 @@ function Read_IOT_Data(event, YMD, HMS, callback) {
     var datapackage = JSON.stringify(event, null, 2);
     console.log('Data Receved from IOT');
     //console.log(datapackage);
-    var Temperature_inside = 50;//JSON.parse(datapackage).reported.ti;
+    var Temperature_inside = 0;//JSON.parse(datapackage).reported.ti;
     var Temperature_outside = 60;// JSON.parse(datapackage).reported.to;
     var Humidmity = 10;//JSON.parse(datapackage).reported.h;
     var Light_level = 10;// JSON.parse(datapackage).reported.l;
@@ -348,8 +348,25 @@ function Send_Low_Temperature_Message(Temperature_inside) {
 function Count_Heater(Month, Heater_current, Last_time, IOT_data, Heater_runningtime,callback) {
     var Time = parseInt(IOT_data[1], 10);
     var Heater_runningtime_total = Heater_runningtime;
+
+    var Time_string = Time.toString();
+    var Time_char = Time_string.split('');
+    var Time_converted = (Time_char[0] + Time_char[1])*3600;
+    Time_converted += (Time_char[2] + Time_char[3])*60;
+    Time_converted += (Time_char[4] + Time_char[5])*1;
+
+    var Last_time_string = Last_time.toString();
+    var Last_time_char = Last_time_string.split('');
+    var Last_time_converted = (Last_time_char[0] + Last_time_char[1])*3600;
+    Last_time_converted += (Last_time_char[2] + Last_time_char[3])*60;
+    Last_time_converted += (Last_time_char[4] + Last_time_char[5])*1;
+
+    console.log(Time);
+    console.log(Last_time);
+    console.log(Time-Last_time);
+    console.log(Time_converted - Last_time_converted);
     if (Heater_current == 1) {
-        Heater_runningtime_total = Heater_runningtime + (Time - Last_time);
+        Heater_runningtime_total = Heater_runningtime + (Time_converted - Last_time_converted);
         Update_Heater_runningtime(Month, Heater_runningtime_total);
     }
     return callback(Heater_runningtime_total);
@@ -361,7 +378,7 @@ function Update_Heater_runningtime(Month, Heater_runningtime_total) {
         Item: {
             'reported': { S: 'Power_consumption_' + Month },
             'index': { S: '0001' },
-            'value': { N: Heater_runningtime_total.toString() }
+            'val': { N: Heater_runningtime_total.toString() }
         }
     };
     ddb.putItem(params_Heater_runningtime, function (err, data) {
