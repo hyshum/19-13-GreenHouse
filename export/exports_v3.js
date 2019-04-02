@@ -5,7 +5,7 @@
 
 console.log('Loading function');
 var AWS = require("aws-sdk");
-//const request = require('request');
+const request = require('request');
 //Readfrom DB
 AWS.config.update({ region: 'us-east-1' });
 var ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
@@ -41,7 +41,7 @@ exports.handler = (event, context, callback) => {
     var HMS = Hour.toString() + Minute.toString() + Second.toString();
     Read_Interval(function (Interval){
         console.log(Interval);
-        if (Interval>0) {
+        if (Interval>20) {
             Write_Interval(0);
             Read_Lowest_temperature(function (Lowest_temperature) {
                 Read_Highest_temperature(function (Highest_temperature) {
@@ -184,13 +184,13 @@ function Read_IOT_Data(event, YMD, HMS, callback) {
     var datapackage = JSON.stringify(event, null, 2);
     console.log('Data Receved from IOT');
     //console.log(datapackage);
-    var Temperature_inside = 100;//JSON.parse(datapackage).reported.ti;
-    var Temperature_outside =  100;//JSON.parse(datapackage).reported.to;
-    var Humidmity = 100;//JSON.parse(datapackage).reported.h;
-    var Light_level = 100;//JSON.parse(datapackage).reported.l;
-    var Soil_Moisture_1 = 100;//JSON.parse(datapackage).reported.a;
-    var Soil_Moisture_2 = 100;//JSON.parse(datapackage).reported.b;
-    var Soil_Moisture_3 = 100;//JSON.parse(datapackage).reported.c;
+    var Temperature_inside = JSON.parse(datapackage).reported.ti;
+    var Temperature_outside =  JSON.parse(datapackage).reported.to;
+    var Humidmity = JSON.parse(datapackage).reported.h;
+    var Light_level = JSON.parse(datapackage).reported.l;
+    var Soil_Moisture_1 = JSON.parse(datapackage).reported.a;
+    var Soil_Moisture_2 = JSON.parse(datapackage).reported.b;
+    var Soil_Moisture_3 = JSON.parse(datapackage).reported.c;
     var IOT_data = [YMD, HMS, Temperature_inside, Temperature_outside, Humidmity, Light_level, Soil_Moisture_1, Soil_Moisture_2, Soil_Moisture_3];
     return callback(IOT_data);
 }
@@ -277,7 +277,7 @@ function Send_Update_Message(IOT_data, context, Last_time, Specific_time,Heater_
     var message6 = 'Soil moisture 1 is ' + Soil_Moisture_1 + '\n';
     var message7 = 'Soil moisture 2 is ' + Soil_Moisture_2 + '\n';
     var message8 = 'Soil moisture 3 is ' + Soil_Moisture_3 + '\n';
-    var message9 = 'The total power consumption in ' + Month + ' is ' + Heater_runningtime_total + ' Kwh';
+    var message9 = 'The total power consumption in ' + Month + ' is ' + Heater_runningtime_total * 120 / 3600000 + ' Kwh';
     var messageupdate = message1 + message2 + message3 + message4 + message5 + message6 + message7 + message8 + message9;
 
 
@@ -299,20 +299,20 @@ function Send_Update_Message(IOT_data, context, Last_time, Specific_time,Heater_
 
 function Switch_On() {
     const option = 'https://maker.ifttt.com/trigger/ec464greenhouseON/with/key/cvJYmevJ910Cxw7Zr5Y6Ac';
-    // request(option, function (error, response, body) {
-    //     console.log('error:', error); // Print the error if one occurred
-    //     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    //     console.log('body:', body); // Print the HTML for the Google homepage.
-    // });
+    request(option, function (error, response, body) {
+        console.log('error:', error); // Print the error if one occurred
+        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+        console.log('body:', body); // Print the HTML for the Google homepage.
+    });
 }
 
 function Switch_OFF() {
     const option = 'https://maker.ifttt.com/trigger/ec464greenhouseOFF/with/key/cvJYmevJ910Cxw7Zr5Y6Ac';
-    // request(option, function (error, response, body) {
-    //     console.log('error:', error); // Print the error if one occurred
-    //     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-    //     console.log('body:', body); // Print the HTML for the Google homepage.
-    // });
+    request(option, function (error, response, body) {
+        console.log('error:', error); // Print the error if one occurred
+        console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+        console.log('body:', body); // Print the HTML for the Google homepage.
+    });
 }
 
 function Switching_On_OFF(IOT_data, Lowest_temperature, Heater_current) {
