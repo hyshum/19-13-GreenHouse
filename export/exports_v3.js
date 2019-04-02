@@ -67,7 +67,7 @@ exports.handler = (event, context, callback) => {
             });
         }
         else {
-            Write_Interval(Interval+1);
+            Write_Interval((Interval*1)+1);
         }
     })
 }
