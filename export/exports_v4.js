@@ -40,7 +40,7 @@ exports.handler = (event, context, callback) => {
     var YMD = Year.toString() + Month.toString() + Day.toString();
     var HMS = Hour.toString() + Minute.toString() + Second.toString();
     Read_IOT_Data(event, YMD, HMS, function (IOT_data) {
-        If(IOT_data[9] == 1){
+        if(IOT_data[9] == 1){
             Read_Interval(function (Interval) {
                 console.log(Interval);
                 if (Interval > 20) {
