@@ -5,7 +5,7 @@
 
 console.log('Loading function');
 var AWS = require("aws-sdk");
-const request = require('request');
+//const request = require('request');
 //Readfrom DB
 AWS.config.update({ region: 'us-east-1' });
 var ddb = new AWS.DynamoDB({ apiVersion: '2012-08-10' });
@@ -40,7 +40,7 @@ exports.handler = (event, context, callback) => {
     var YMD = Year.toString() + Month.toString() + Day.toString();
     var HMS = Hour.toString() + Minute.toString() + Second.toString();
     Read_IOT_Data(event, YMD, HMS, function (IOT_data) {
-        if(IOT_data[9] == 1){
+        if(IOT_data[9] == 1 ){
             Read_Interval(function (Interval) {
                 console.log(Interval);
                 if (Interval > 20) {
@@ -183,8 +183,8 @@ exports.handler = (event, context, callback) => {
     function Read_IOT_Data(event, YMD, HMS, callback) {
         var datapackage = JSON.stringify(event, null, 2);
         console.log('Data Receved from IOT');
-        //console.log(datapackage);
-        var IOT_data = JSON.parse(datapackage).reported.t;
+        var IOT_data_string = JSON.parse(datapackage).reported.t;
+        var IOT_data = IOT_data_string.split(';');
         var Temperature_inside = IOT_data[0];
         var Temperature_outside = IOT_data[1];
         var Humidmity = IOT_data[2];
@@ -301,20 +301,20 @@ exports.handler = (event, context, callback) => {
 
     function Switch_On() {
         const option = 'https://maker.ifttt.com/trigger/ec464greenhouseON/with/key/cvJYmevJ910Cxw7Zr5Y6Ac';
-        request(option, function (error, response, body) {
-            console.log('error:', error); // Print the error if one occurred
-            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-            console.log('body:', body); // Print the HTML for the Google homepage.
-        });
+        // request(option, function (error, response, body) {
+        //     console.log('error:', error); // Print the error if one occurred
+        //     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+        //     console.log('body:', body); // Print the HTML for the Google homepage.
+        // });
     }
 
     function Switch_OFF() {
         const option = 'https://maker.ifttt.com/trigger/ec464greenhouseOFF/with/key/cvJYmevJ910Cxw7Zr5Y6Ac';
-        request(option, function (error, response, body) {
-            console.log('error:', error); // Print the error if one occurred
-            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-            console.log('body:', body); // Print the HTML for the Google homepage.
-        });
+        // request(option, function (error, response, body) {
+        //     console.log('error:', error); // Print the error if one occurred
+        //     console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+        //     console.log('body:', body); // Print the HTML for the Google homepage.
+        // });
     }
 
     function Switching_On_OFF(IOT_data, Lowest_temperature, Highest_temperature, Heater_current) {
@@ -323,7 +323,8 @@ exports.handler = (event, context, callback) => {
         if (Temperature_inside < Lowest_temperature && Heater_current == 0) {
             Switch_On();
             console.log('Switch Heater On');
-
+            console.log(Temperature_inside);
+            console.log(Lowest_temperature);
             Heater_next = 1;
             Write_Heater_current(Heater_next);
             Send_Low_Temperature_Message(Temperature_inside);
@@ -335,13 +336,14 @@ exports.handler = (event, context, callback) => {
             Write_Heater_current(Heater_next);
         }
         else if (Temperature_inside > Highest_temperature) {
-            Send_High_Temperature_Message(Temperature_inside);
+            console.log('Temperature_inside' + Temperature_inside);
+            console.log('Highest_temperature' + Highest_temperature);
         }
     }
 
 
     function Send_Low_Temperature_Message(Temperature_inside) {
-        var messagewarning_temperature_too_low = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
+        var messagewarning_temperature_too_low = 'Low temperature Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
         var sns = new AWS.SNS();
         var params = {
             Message: messagewarning_temperature_too_low,
@@ -354,7 +356,7 @@ exports.handler = (event, context, callback) => {
     }
 
     function Send_High_Temperature_Message(Temperature_inside) {
-        var messagewarning_temperature_too_high = 'Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
+        var messagewarning_temperature_too_high = 'High temperature Warnning: the current temperature in your greenhouse is ' + Temperature_inside;
         var sns = new AWS.SNS();
         var params = {
             Message: messagewarning_temperature_too_high,
@@ -382,10 +384,6 @@ exports.handler = (event, context, callback) => {
         Last_time_converted += (Last_time_char[2] + Last_time_char[3]) * 60;
         Last_time_converted += (Last_time_char[4] + Last_time_char[5]) * 1;
 
-        console.log(Time);
-        console.log(Last_time);
-        console.log(Time - Last_time);
-        console.log(Time_converted - Last_time_converted);
         if (Heater_current == 1) {
             Heater_runningtime_total = Heater_runningtime + (Time_converted - Last_time_converted);
             Update_Heater_runningtime(Month, Heater_runningtime_total);
