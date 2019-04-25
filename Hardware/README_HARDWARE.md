@@ -7,7 +7,8 @@ The hardware portion of this project can be broken down into three core sections
 #### Bill of Materials
 
 #### Vendor Information
-###### Incandescent Rope Light
+#### *Incandescent Rope Light
+
 
 ## External Structure
 
