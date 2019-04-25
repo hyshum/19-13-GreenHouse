@@ -4,7 +4,10 @@ The hardware portion of this project can be broken down into three core sections
 * Internal structure
 * Sensor circuitry
 
-#### Vendor Information and Bill of Materials
+#### Bill of Materials
+
+#### Vendor Information
+###### Incandescent Rope Light
 
 ## External Structure
 
