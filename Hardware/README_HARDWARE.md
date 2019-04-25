@@ -7,9 +7,10 @@ The hardware portion of this project can be broken down into three core sections
 ### Bill of Materials:
 
 ### Vendor Information:
-Item(s) | Vendor Info
-------- | -----------
+Vendor Info | Item(s)
+----------- | -----------
 Incandescent Rope Light | [Persik](https://persik.com/collections/rope-lights/products/persik-18-feet-red-rope-light-for-indoor-and-outdoor-use-pack-of-2-total-36-feet-length)
+The Home Depot | <ul><li> Item 1 </li><li> Item 2 </li></ul>
 
 
 ## External Structure
