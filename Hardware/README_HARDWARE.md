@@ -10,7 +10,7 @@ The hardware portion of this project can be broken down into three core sections
 Vendor Info | Item(s)
 ----------- | -----------
 Incandescent Rope Light | [Persik](https://persik.com/collections/rope-lights/products/persik-18-feet-red-rope-light-for-indoor-and-outdoor-use-pack-of-2-total-36-feet-length)
-The Home Depot | <ul><li> Item 1 </li><li> Item 2 </li></ul>
+The Home Depot | <ul><li>PVC Pipe: </li><ul><li>PVC Joints: </li><ul><li>90 degree</li><li>45 degree</li></ul></ul></ul>
 
 
 ## External Structure
