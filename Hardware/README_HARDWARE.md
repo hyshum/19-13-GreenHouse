@@ -17,7 +17,7 @@ Cedar Lumber: 2in. x 10in. x 12ft. | $18.77 | 1 | 1 | $18.77
 BC Plywood: 4ft. x 4ft. | $20.88 | 1 | 1 | $20.88
 Polyethlene Film: 12ft. x 25ft. | $57.94 | 1 | 1 | $57.94
 Adhesive Zipper | $17.99 | 1 | 1 | $17.99
-Incandescent Rope Light | $33.98 | 1 | 2 | $33.98
+[Incandescent Rope Light](https://persik.com/collections/rope-lights/products/persik-18-feet-red-rope-light-for-indoor-and-outdoor-use-pack-of-2-total-36-feet-length) | $33.98 | 1 | 2 | $33.98
 Continuous Hinge (30in.) | $7.47 | 1 | 1 | $7.47
 Corner Brace (2in.) | $2.56 | 3 | 4 | $7.68
 Corner Bracket | $7.48 | 1 | 20 | $7.48
@@ -37,7 +37,7 @@ Solid Core Wire (1ft.) | $0.29 | 1 | 25 | $7.99
 ### Vendor Information:
 Vendor Info | Item(s)
 ----------- | -----------
-Incandescent Rope Light | [Persik](https://persik.com/collections/rope-lights/products/persik-18-feet-red-rope-light-for-indoor-and-outdoor-use-pack-of-2-total-36-feet-length)
+[Persik](https://persik.com/pages/about-us) | Incandescent Rope Light (18ft.)
 The Home Depot | <ul><li>PVC Pipe:</li><ul><li>PVC Joints: </li><ul><li>90 degree elbow</li><li>45 degree elbow</li></ul><li>Genova Schedule 40 Pressure Pipe, 1-1/2 in. x 10 ft., Plain End</li></ul><li>BC Plywood</li><li>Continuous Hinge</li><li>Corner Brace</li><li>Corner Bracket</li><li>Door Handle</li><li>Everbilt Wood Screws</li><li>Cedar Lumbar</li></ul>
 
 
