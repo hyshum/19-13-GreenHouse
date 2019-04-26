@@ -1,14 +1,12 @@
 # Software Report
 ## Table of Content
-[1. Overview of software module](#Overview_of_software_module)
-    a. [Arduino and NodeMCU Embedded System](#Arduino_and_NodeMCU_Embedded_System)
-    b. [Lambda](#Lambda)
-    c. [Web Application](#Web_Application)
-[2. Flow chart](#Flow_chart) 
-
-[3. Dev/build tool information](#Dev_build_tool_information)
-
-[4. Install the project software stack](#Install_the_project_software_stack)  
+1. [Overview of software module](#Overview_of_software_module)<br /> 
+    a. [Arduino and NodeMCU Embedded System](#Arduino_and_NodeMCU_Embedded_System)<br /> 
+    b. [Lambda](#Lambda)<br /> 
+    c. [Web Application](#Web_Application)<br /> 
+2. [Flow chart](#Flow_chart) 
+3. [Dev/build tool information](#Dev_build_tool_information)
+4. [Install the project software stack](#Install_the_project_software_stack)  
 
 <a name = "Overview_of_software_modul"></a>
 ## Overview of software module
