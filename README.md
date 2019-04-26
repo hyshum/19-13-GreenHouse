@@ -12,14 +12,14 @@ Qian Zhang
 
 ### Table of Contents
 1. [Current Project Status](#status)  
-  a. [Greenhouse Structure](#struct)
-  b. [Web Application](#app)
-2. [Usage](#usage)
+  a. [Greenhouse Structure](#struct)  
+  b. [Web Application](#app)  
+2. [Usage](#usage)  
   a. [Reconfiguring Wifi](#wifi)  
-    i. [Reconfiguring NodeMCU](#mcu)
-    ii. [Reconfiguring Wemo Smart Plug](#smart)
+    1. [Reconfiguring NodeMCU](#mcu)  
+    2. [Reconfiguring Wemo Smart Plug](#smart)  
   b. [Moving the Greenhouse](#move)  
-  
+3. [Further Improvements](#imp)
 <a name = "status"></a>
 ## Current Project Status 
 The current project status consists of a working prototype which meets the following requirements:
@@ -88,3 +88,13 @@ Your Wemo smart plug should now be connected to the Wifi network of your choosin
 The greenhouse is fairly easy to move. It is not very heavy, but we have added wheels to make it easier to transport. The greenhouse can only be rolled back and forth along one axis, so make sure to move it carefully. To date, we have not yet cemented the structure to the base of the greenhouse. This is because we discovered that it can be a tight fit getting the greenhouse through doorways. If you are moving the greenhouse, make sure that the doorways the greenhouse will need to pass through are large enough to accomodate it. At this time, the structure can still be removed in case we need to deal with any difficult to navigate doorways on ECE day. 
 
 Unplug the greenhouse from any wall sockets before attempting to move the greenhouse. You should also attempt to hold the extension cord above the ground while moving the greenhouse to prevent any damage to the cord. Once you have moved the greenhouse to its new location, ensure that all electronics are still properly attached. This includes individual sensors, the serial connection between the NodeMCU and the Arduino, and the actual connections into the extension cord. Once this has all been verified, you can safely plug the greenhouse back in.
+
+<a name = "imp"></a>
+## Further Improvements
+Our customer gave us a few optional suggestions of ways that we could further improve our device, but that we ultimately decided were out of the scope of what we wanted to complete during the course of this project. 
+
+The first was using some sort of alternate power supply. Our current device, must be plugged into a wall to operate. Our customer suggested that it may be interesting to explore whether solar power or a backup battery could also be used. Solar power would ideally replace the entire current power supply, making the device low cost to use and with less of an environmental footprint. A backup battery might be ideal for if power to the greenhouse is suddenly lost. During a power outage, this could continue to maintain a suitable temperature for the plants.
+
+Another suggestion was to use cameras and computer vision to monitor the growth of the plants. Cameras could periodically capture images of the plants and compare the images with what expected plant growth should look like to see whether the plants are actually growing well.
+
+A third suggestion was to also implement an automatic watering functionality. Currently, only the temperature is maintained automatically. However, the project could be extended to automatically water certain plants if their soil moisture is detected to be below a certain level. This would be fairly straightforward to implement, as the readings are already collected, they would just then need to trigger another function if the readings were too low. We decided not to pursue this as it was not a priority for our customer. 
