@@ -8,9 +8,12 @@
 3. [Dev/build tool information](#Dev_build_tool_information)
 4. [Install the project software stack](#Install_the_project_software_stack)  
     a. [Installation of webapp on local machine](#Installation_of_webapp_on_local_machine)<br /> 
-    b. [Command to run the the server](#Command_to_run_the_server)<br /> 
+    b. [Command to run the server](#Command_to_run_the_server)<br /> 
     c. [Web Configuring Wemo_Smart Plug with WLAN](#Configuring_Wemo_Smart_Plug_with_WLAN)<br /> 
-<a name = "Overview_of_software_modul"></a>
+    
+    
+    
+<a name = "Overview_of_software_model"></a>
 ## Overview of software module
 
 <a name = "Arduino_and_NodeMCU_Embedded_System"></a>
@@ -64,6 +67,7 @@ For example, OpenCV 4.0.3  with Python 3.8.1, using CUDA Toolbox 10.0 and GCC 9.
 
 <a name = "Install_the_project_software_stack"></a>
 ## Install the project software stack
+<a name = "Installation_of_webapp_on_local_machine"></a>
 ### Installation of webapp on local machine
 1. Clone the repository on to the local machine. 
 2. Add .env file that contains the API keys(content of .env is provided by our team) .
@@ -74,11 +78,13 @@ For example, OpenCV 4.0.3  with Python 3.8.1, using CUDA Toolbox 10.0 and GCC 9.
 7. Create new access key for this boto3 client on AWS 
 8. Run “aws configure” to add your generated access keys to your system
 
-### Command to run the the server:
+<a name = "Command_to_run_the_server"></a>
+### Command to run the server:
 1. Go to the webapp directory
 2. “./run.sh” is the only command to run the server.
 3. Route for the webapp is localhost:5000/login/dashboard
 
+<a name = "Configuring_Wemo_Smart_Plug_with_WLAN"></a>
 ### Configuring Wemo_Smart Plug with WLAN:
 1. Download “Wemo” App from App Store onto phone (available for both iOS and Android)
 2. Connect your phone to your local 2.4GHz network. NOTE: we recommend disabling auto-reconnect to all other wifi networks or entering Airplane mode to ensure your device is paired to the correct network
