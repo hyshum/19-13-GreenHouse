@@ -3,7 +3,13 @@
 ## Overview of software module
 ## Flow chart
 ![alt text](https://github.com/BostonUniversitySeniorDesign/19-13-GreenHouse/blob/master/Software/Flow%20Chart.png)
-For instance, if you have a main.py and LCD.py, you need to show that LCD.py is a module used by main.py.
+Arduino collects all sensor data and transfer to Nodemcu.
+Nodemcu sends the data to AWS IOT. 
+AWS IOT sends the data to Lambda. 
+Lambda stores the data into AWS DynamoDB, and present the data on Web Application
+Lambda triggers the Simple Notification service if the temperature is too low or too high
+Lambda turns on the heater is the temperature is too low, or turns off the heater if the temperature is higher the desired lowest temperature
+
 ## Dev/build tool information: Package name and version info. 
 For example, OpenCV 4.0.3  with Python 3.8.1, using CUDA Toolbox 10.0 and GCC 9.1 and CMake 3.14.2
 ## Install the project software stack
@@ -31,9 +37,4 @@ For example, OpenCV 4.0.3  with Python 3.8.1, using CUDA Toolbox 10.0 and GCC 9.
 6. Plug heater into Wemo
 
 
-Example:
-• Debian Linux 9.1 into embedded system, with kernel patch to enable the USB controller
-• how to use CMake to cross-compile code, how to transfer binary into the target, how
-target autoruns binary, etc.
-• How to setup/startup cloud instance that collects and processes data from the
-embedded system
+
