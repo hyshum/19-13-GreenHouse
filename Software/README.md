@@ -7,7 +7,9 @@
 2. [Flow chart](#Flow_chart) 
 3. [Dev/build tool information](#Dev_build_tool_information)
 4. [Install the project software stack](#Install_the_project_software_stack)  
-
+    a. [Installation of webapp on local machine](#Installation_of_webapp_on_local_machine)<br /> 
+    b. [Command to run the the server](#Command_to_run_the_server)<br /> 
+    c. [Web Configuring Wemo_Smart Plug with WLAN](#Configuring_Wemo_Smart_Plug_with_WLAN)<br /> 
 <a name = "Overview_of_software_modul"></a>
 ## Overview of software module
 
@@ -77,8 +79,8 @@ For example, OpenCV 4.0.3  with Python 3.8.1, using CUDA Toolbox 10.0 and GCC 9.
 2. “./run.sh” is the only command to run the server.
 3. Route for the webapp is localhost:5000/login/dashboard
 
-### Configuring Wemo Smart Plug with your WLAN:
-1. Download “Wemo” App from App Store onto your phone (available for both iOS and Android)
+### Configuring Wemo_Smart Plug with WLAN:
+1. Download “Wemo” App from App Store onto phone (available for both iOS and Android)
 2. Connect your phone to your local 2.4GHz network. NOTE: we recommend disabling auto-reconnect to all other wifi networks or entering Airplane mode to ensure your device is paired to the correct network
 3. Open Wemo App and select “Add a Wemo” in the settings page
 4. Follow instructions on phone to add Wemo device. NOTE: if this is your first time installing Wemo or your SSID changes, you must hold down the power button while plugging your Wemo in to reset to factory mode. Wemo is ready for setup when light is flashing white and orange.
