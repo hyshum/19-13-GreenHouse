@@ -1,11 +1,8 @@
 # Software Report
 ## Table of Content
 [1. Overview of software module](#Overview_of_software_module)
-
-a. [Arduino and NodeMCU Embedded System](#Arduino_and_NodeMCU_Embedded_System)
-
-b. [Lambda](#Lambda)
-
+    a. [Arduino and NodeMCU Embedded System](#Arduino_and_NodeMCU_Embedded_System)
+    b. [Lambda](#Lambda)
     c. [Web Application](#Web_Application)
 [2. Flow chart](#Flow_chart) 
 
