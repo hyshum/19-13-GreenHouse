@@ -1,7 +1,9 @@
 # Software Report
 ## Table of Content
 [1. Overview of software module](#Overview_of_software_module) 
-
+[2. Flow chart](#Flow_chart) 
+[3. Dev/build tool information](#Dev_build_tool_information)
+[4. Install the project software stack](#Install_the_project_software_stack)  
 <a name = "Overview_of_software_modul"></a>
 ## Overview of software module
 ### Arduino and NodeMCU Embedded System:
@@ -33,6 +35,7 @@ The rendering of the dynamic dashboard is done with the Flask template. The only
 #### Hosting:
 The client has informed us that hosting the web application on one of his existing domains or hosting locally are both acceptable options. We have chosen to host locally to reduce unnecessary cost. The project is easy to run on localhost. A run script has been written to simplify the process to start the server. Running the server should be a fairly simple task. Though the user does not have to configure AWS to run on their own account, it is strongly recommended they do so. Currently DynamoDB and Amazon Lambda are being hosted on a student account, which is likely to close after graduation. The user should set up their own AWS account to continue to receive information after May.
   
+<a name = "Flow_chart"></a>
 ## Flow chart
 ![alt text](https://github.com/BostonUniversitySeniorDesign/19-13-GreenHouse/blob/master/Software/Flow%20Chart.png)
 Arduino collects all sensor data and transfer to Nodemcu.
@@ -42,8 +45,13 @@ Lambda stores the data into AWS DynamoDB, and present the data on Web Applicatio
 Lambda triggers the Simple Notification service if the temperature is too low or too high
 Lambda turns on the heater is the temperature is too low, or turns off the heater if the temperature is higher the desired lowest temperature
 
+<a name = "Dev_build_tool_information"></a>
 ## Dev/build tool information: Package name and version info. 
 For example, OpenCV 4.0.3  with Python 3.8.1, using CUDA Toolbox 10.0 and GCC 9.1 and CMake 3.14.2
+
+
+
+<a name = "Install_the_project_software_stack"></a>
 ## Install the project software stack
 ### Installation of webapp on local machine
 1. Clone the repository on to the local machine. 
