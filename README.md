@@ -10,7 +10,12 @@ Hok Yin Shum
 Kiahna Tucker  
 Qian Zhang  
 
-## Current Project Status
+### Table of Contents
+[Current Project Status](#status)  
+[Reconfiguring Wifi](#wifi)  
+[Moving the Greenhouse](#move)  
+
+## Current Project Status <a name = "status"></a>
 The current project status consists of a working prototype which meets the following requirements:
 
 ### Greenhouse Structure
@@ -36,7 +41,7 @@ These requirements have been met and the mechanisms for meeting them are describ
 
 ## Usage
 
-### Reconfiguring Wifi
+### Reconfiguring Wifi <a name = "wifi"></a>
 Wifi networks must be reconfigured to use this device with wifi settings that are not the ones that we have been using throughout this semester. Both the NodeMCU wifi board and the Wemo Smart Plug must be reconfigured.
 #### Reconfiguring NodeMCU
 To change the settings on the NodeMCU, you will need to unplug it from the extension cord and plug it into your laptop. You should download the Arduino IDE in order to flash the device. Disconnect the serial TX and RX pins from the TX and RX pins of the Arduino. Connect a wire from the D3 pin on the NodeMCU to its own ground. This enables the board to be flashed.  
@@ -69,7 +74,7 @@ I found it easiest to put my phone in Airplane mode and disable auto-reconnect o
 
 Your Wemo smart plug should now be connected to the Wifi network of your choosing!
 
-## Moving the Greenhouse
+## Moving the Greenhouse <a name = "move"></a>
 The greenhouse is fairly easy to move. It is not very heavy, but we have added wheels to make it easier to transport. The greenhouse can only be rolled back and forth along one axis, so make sure to move it carefully. To date, we have not yet cemented the structure to the base of the greenhouse. This is because we discovered that it can be a tight fit getting the greenhouse through doorways. If you are moving the greenhouse, make sure that the doorways the greenhouse will need to pass through are large enough to accomodate it. At this time, the structure can still be removed in case we need to deal with any difficult to navigate doorways on ECE day. 
 
 Unplug the greenhouse from any wall sockets before attempting to move the greenhouse. You should also attempt to hold the extension cord above the ground while moving the greenhouse to prevent any damage to the cord. Once you have moved the greenhouse to its new location, ensure that all electronics are still properly attached. This includes individual sensors, the serial connection between the NodeMCU and the Arduino, and the actual connections into the extension cord. Once this has all been verified, you can safely plug the greenhouse back in.
