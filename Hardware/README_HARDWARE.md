@@ -7,8 +7,6 @@ The hardware portion of this project can be broken down into three core sections
 ### Bill of Materials:
 Item | Cost per Item | Quantity | Number Included in Package | Total Cost |
 ---- | ------------- | -------- | -------------------------- | ---------- |
- | External Structure | 
- | ------------------ |
 PVC Pipe | $5.13 | 4 | 1 | $20.52
 PVC Joint: 90 Degree Elbow | $2.13 | 2 | 1 | $4.26
 PVC Joint: 45 Degree Elbow | $1.26 | 4 | 1 | $5.04
@@ -40,7 +38,7 @@ Solid Core Wire (1ft.) | $0.29 | 1 | 25 | $7.99
 Vendor Info | Item(s)
 ----------- | -----------
 Incandescent Rope Light | [Persik](https://persik.com/collections/rope-lights/products/persik-18-feet-red-rope-light-for-indoor-and-outdoor-use-pack-of-2-total-36-feet-length)
-The Home Depot | <ul><li>PVC Pipe: </li><ul><li>PVC Joints: </li><ul><li>90 degree elbow</li><li>45 degree elbow</li></ul><li>Genova Schedule 40 Pressure Pipe, 1-1/2 in. x 10 ft., Plain End</li></ul></ul>
+The Home Depot | <ul><li>PVC Pipe:</li><ul><li>PVC Joints: </li><ul><li>90 degree elbow</li><li>45 degree elbow</li></ul><li>Genova Schedule 40 Pressure Pipe, 1-1/2 in. x 10 ft., Plain End</li></ul><li>BC Plywood</li><li>Continuous Hinge</li><li>Corner Brace</li><li>Corner Bracket</li><li>Door Handle</li><li>Everbilt Wood Screws</li><li>Cedar Lumbar</li></ul>
 
 
 ## External Structure
