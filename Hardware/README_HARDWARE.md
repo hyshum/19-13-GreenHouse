@@ -7,6 +7,8 @@ The hardware portion of this project can be broken down into three core sections
 ### Bill of Materials:
 Item | Cost per Item | Quantity | Number Included in Package | Total Cost |
 ---- | ------------- | -------- | -------------------------- | ---------- |
+ | External Structure | 
+ | ------------------ |
 PVC Pipe | $5.13 | 4 | 1 | $20.52
 PVC Joint: 90 Degree Elbow | $2.13 | 2 | 1 | $4.26
 PVC Joint: 45 Degree Elbow | $1.26 | 4 | 1 | $5.04
