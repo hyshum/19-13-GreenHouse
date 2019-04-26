@@ -1,0 +1,20 @@
+<form action="route_demo/result">
+  <div class="group">
+    <input type="text" name="set_temp"><span class="highlight"></span><span class="bar"></span>
+    <label>Set Temperature</label>
+  </div>
+
+  <button type="submit" value="Submit"  class="button buttonBlue">Set
+    <div class="ripples buttonRipples"><span class="ripplesCircle"></span></div>
+  </button>
+</form>
+
+</body>
+
+</html
+
+
+article:
+
+grid-template-columns: auto minmax(min-content, 1fr);
+grid-template-rows: auto minmax(min-content, 1fr) auto;
