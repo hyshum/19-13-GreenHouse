@@ -18,7 +18,7 @@ Qian Zhang
   a. [Reconfiguring Wifi](#wifi)  
     1. [Reconfiguring NodeMCU](#mcu)  
     2. [Reconfiguring Wemo Smart Plug](#smart)  
-  b. [Moving the Greenhouse](#move)  
+ 3. [Moving the Greenhouse](#move)  
 3. [Further Improvements](#imp)
 <a name = "status"></a>
 ## Current Project Status 
