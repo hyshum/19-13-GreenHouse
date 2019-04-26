@@ -1,5 +1,7 @@
 # EC464: Greenhouse Project, 2018-2019
+A small-scale greenhouse that allows the user to view current sensor readings within the greenhouse from a web application and enables automatic heating if temperature values are too low. The device is intended to be used by casual gardeners who want to allow their plants to receive natural sunlight in the winter but whose plants will die or be severely damaged if left to completely withstand the elements alone. This device serves as an alternative to traditional greenhouses, which are often quite large and expensive to put together and are simply not realistic for casual gardeners. 
 
+This project was created for EC463/464 Senior Design for Electrical and Computer Engineers at Boston University in 2018-2019.
 
 #### Team Members:
 Olivia Dorencz  
@@ -31,3 +33,27 @@ The current project status consists of a working prototype which meets the follo
 
 
 These requirements have been met and the mechanisms for meeting them are described in more detail in [README_HARDWARE.md](Hardware/README_HARDWARE.md) and [README_SOFTWARE.md](Software/README_SOFTWARE.md) 
+
+## Usage
+
+### Reconfiguring Wifi
+Wifi networks must be reconfigured to use this device with wifi settings that are not the ones that we have been using throughout this semester. Both the NodeMCU wifi board and the Wemo Smart Plug must be reconfigured.
+#### Reconfiguring NodeMCU
+To change the settings on the NodeMCU, you will need to unplug it from the extension cord and plug it into your laptop. You should download the Arduino IDE in order to flash the device. Disconnect the serial TX and RX pins from the TX and RX pins of the Arduino. Connect a wire from the D3 pin on the NodeMCU to its own ground. This enables the board to be flashed. 
+Download the nodemcu code [here](Software/arduino/test_wifi/node_mcu). 
+Open node_mcu.ino in the Arduino IDE. 
+If secrets.h does not open in an additional tab, manually open that file using your text editor of choice. 
+Change the values of ssid and password in secrets.h to match the Wifi network you wish to use. 
+You will also need to generate your own AWS IOT keys. The process for doing that is described in [this tutorial](https://github.com/debsahu/ESP-MQTT-AWS-IoT-Core/blob/master/doc/README.md).
+Save everything and compile before attempting to upload to the board. If you are missing any libraries, you will need to install them. All libraries used are linked below:
+
+[ESP8266Wifi](https://github.com/esp8266/Arduino/tree/master/libraries/ESP8266WiFi)
+[ArduinoJson](https://github.com/bblanchon/ArduinoJson)
+[WiFiClientSecure](https://github.com/espressif/arduino-esp32/tree/master/libraries/WiFiClientSecure)
+[MQTT](https://github.com/256dpi/arduino-mqtt)
+
+You may also need to install the ESP8266 board library if you have not previously used an ESP8266 device. This can be done within the Arduino IDE by going to Tools > Board > Boards Manager, searching for "esp8266" and installing the first result that appears.
+
+When you are ready to upload your code to the NodeMCU, select "NodeMCU 0.9 (ESP-12 Module)" under Tools > Board. Also set the baud rate to 11520 under Tools > Upload Speed. You should now be able to upload your code.
+
+After uploading your code, unplug your NodeMCU from your computer and reconnect it to the extension cord in the greenhouse. You can then re-attach the serial pins of the NodeMCU to the serial pins of the Arduino. Remember: TX on one connects to RX on the other. Your board should now be able to connect to the new wifi network you provided.
