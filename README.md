@@ -14,8 +14,8 @@ Qian Zhang
 [Current Project Status](#status)  
 [Reconfiguring Wifi](#wifi)  
 [Moving the Greenhouse](#move)  
-
-## Current Project Status <a name = "status"></a>
+<a name = "status"></a>
+## Current Project Status 
 The current project status consists of a working prototype which meets the following requirements:
 
 ### Greenhouse Structure
