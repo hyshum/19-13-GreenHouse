@@ -1,5 +1,8 @@
 # Software Report
+## Table of Content
+[1. Overview of software module](#Overview_of_software_module) 
 
+<a name = "Overview_of_software_modul"></a>
 ## Overview of software module
 ### Arduino and NodeMCU Embedded System:
 Two microcontrollers are used to read current measurements and send these measurements to the DynamoDB database over a wifi connection. The first microcontroller is an Arduino Genuino Uno. All sensors are directly connected to the Arduino using digital and analog connections depending on the sensors requirements. The Arduino packs all of these readings into a single string which it sends to the NodeMCU over a Serial UART connection every 5 seconds. 
