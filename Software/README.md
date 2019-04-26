@@ -1,7 +1,9 @@
 # Software Report
 ## Table of Content
 [1. Overview of software module](#Overview_of_software_module)
-
+    a. [Arduino and NodeMCU Embedded System](#Arduino_and_NodeMCU_Embedded_System)
+    b. [Lambda](#Lambda)
+    c. [Web Application](#Web_Application)
 [2. Flow chart](#Flow_chart) 
 
 [3. Dev/build tool information](#Dev_build_tool_information)
@@ -10,9 +12,9 @@
 
 <a name = "Overview_of_software_modul"></a>
 ## Overview of software module
-### Arduino and NodeMCU Embedded System:
-[Code](#../Arduino_and_NodeMCU_Embedded_System) 
 
+<a name = "Arduino_and_NodeMCU_Embedded_System"></a>
+### Arduino and NodeMCU Embedded System:
 
 Two microcontrollers are used to read current measurements and send these measurements to the DynamoDB database over a wifi connection. The first microcontroller is an Arduino Genuino Uno. All sensors are directly connected to the Arduino using digital and analog connections depending on the sensors requirements. The Arduino packs all of these readings into a single string which it sends to the NodeMCU over a Serial UART connection every 5 seconds. 
 
@@ -20,6 +22,7 @@ Upon setup, the NodeMCU connects to the provided wifi network. It then attempts 
 
 If the NodeMCU disconnects from AWS or the user’s wifi at any point, it will attempt to reconnect and continue operation. To detect and avoid of sending empty data package, an constant variable is sent with all other sensor data, and its value is always one. 
 
+<a name = "Lambda"></a>
 ### Lambda:
 The central system is written in NodeJS and is located on Lambda supported by AWS, where the code can run without provisioning or managing servers. The central system integrates all virtual funcalities except backend of the web application, and most of them are supported by AWS as well. Application built in Lambd is responsive to events and new information. For our system, the application is responding to events triggered by AWS IOT. We linked AWS IOT to our greenhouse by registering Nodemcu in IOT. The communication between Nodemcu and IOT is through MQTT, the publish-subscribe-based messaging protocol. 
 
@@ -28,6 +31,7 @@ When AWS IOT is triggered by the MQTT request, it transfers the JSON package to 
 Simultaneously when SNS is triggered, Lambda triggers the heater. The heater is powered by Smartplug that could be triggered by receiving HTTP request. By sending HTTP request, Lambda turns on and turns off the heater remotely. If the temperature inside the greenhouse is lower than the lowest desired temperature and the heater is currently off, Lambda sends a HTTP request to turn on the heater. Similarly, If the temperature inside the greenhouse is higher than the lowest desired temperature and the heater is currently on, Lambda sends a HTTP request to turn off the heater. Lambda also records how long the heater is on and stores the time in DynamoDB by months. By multiplying the time by the power of the heater, the power consumption is estimated. By multiplying the power consumption by the electricity rates, the electricity cost is estimated. 
 We also provide the service of updating our the client the status of the greenhouse at a specific time. This time is input in the web application and stored in DynamoDB. Matching the specific time to the timestamp of data package is difficult. The central system stores and updates the latest timestamp in a item. Whenever Lambda receive the new data package, it compares the latest timestamp and the new timestamp to the specific time. If the latest timestamp is before the specific time and the new timestamp is after the specific time, Lambda customize a message which includes all the sensor data and power consumption and sends to client by triggering SNS.  
 
+<a name = "Web_Application"></a>
 ### Web Application:
 #### Backend:
 The backend of the web application is built with Flask written in Python. There are many reasons for using Flask. First, the software engineers on this team are fairly familiar with Python, so Flask seemed like an obvious extension of that. Secondly, Flask is a lightweight framework and accelerates the development and production as developers can focus on the creation of the functions. Thirdly, it has Object-Relational Mapping support and clear and defined Model-View-Controller organization which assists in rapid software development. Last but not least, there are many available Python modules available so choosing Flask allows us to utilize existing Python modules.
