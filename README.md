@@ -1,5 +1,5 @@
 # EC464: Greenhouse Project, 2018-2019
-A small-scale greenhouse that allows the user to view current sensor readings within the greenhouse from a web application and enables automatic heating if temperature values are too low. The device is intended to be used by casual gardeners who want to allow their plants to receive natural sunlight in the winter but whose plants will die or be severely damaged if left to completely withstand the elements alone. This device serves as an alternative to traditional greenhouses, which are often quite large and expensive to put together and are simply not realistic for casual gardeners. 
+A small-scale greenhouse that allows the user to view current sensor readings within the greenhouse from a web application and enables automatic heating if temperature values are too low. The device is intended to be used by casual gardeners who want to allow their plants to receive natural sunlight in the winter but whose plants will die or be severely damaged if left to completely withstand the elements alone. This device serves as an alternative to traditional greenhouses, which are often quite large and expensive to put together and are simply not realistic for casual gardeners. Descriptions of the hardware components used to complete this project are included in [/Hardware](Hardware) and descriptions of the software components used to complete this project are included in [/Software](Software)
 
 This project was created for EC463/464 Senior Design for Electrical and Computer Engineers at Boston University in 2018-2019.  
 Customer: Ned Utzig, ned@utzig.com
@@ -20,9 +20,10 @@ Qian Zhang
     1. [Reconfiguring NodeMCU](#mcu)  
     2. [Reconfiguring Wemo Smart Plug](#smart)  
 3. [Moving the Greenhouse](#move)
-4. [NodeMCU Tips](#nodetips)
-5. [AWS Lambda Tips](#lambda)
-6. [Further Improvements](#imp)
+4. [Hardware Tips](#hwtips)
+5. [NodeMCU Tips](#nodetips)
+6. [AWS Lambda Tips](#lambda)
+7. [Further Improvements](#imp)
 
 <a name = "status"></a>
 ## Current Project Status 
@@ -92,7 +93,7 @@ Your Wemo smart plug should now be connected to the Wifi network of your choosin
 The greenhouse is fairly easy to move. It is not very heavy, but we have added wheels to make it easier to transport. The greenhouse can only be rolled back and forth along one axis, so make sure to move it carefully. To date, we have not yet cemented the structure to the base of the greenhouse. This is because we discovered that it can be a tight fit getting the greenhouse through doorways. If you are moving the greenhouse, make sure that the doorways the greenhouse will need to pass through are large enough to accomodate it. At this time, the structure can still be removed in case we need to deal with any difficult to navigate doorways on ECE day. 
 
 Unplug the greenhouse from any wall sockets before attempting to move the greenhouse. You should also attempt to hold the extension cord above the ground while moving the greenhouse to prevent any damage to the cord. Once you have moved the greenhouse to its new location, ensure that all electronics are still properly attached. This includes individual sensors, the serial connection between the NodeMCU and the Arduino, and the actual connections into the extension cord. Once this has all been verified, you can safely plug the greenhouse back in.
-<a name = "sensors"></a>
+<a name = "hwtips"></a>
 ## Hardware Tips
 The DHT11 temperature and humidity sensors that we used are quite reliable, however they also can be damaged. The sensors have an upper temperature limit of approximately 140 degrees Fahrenheit. If subjected to temperatures higher than this, the sensor will likely be destroyed. Do not use a heat gun when testing these sensors, even if set to temperatures lower than 140 degrees Fahrenheit. Depending on the proximity to the heat gun, the temperature sensor can still be exposed to temperatures that will damage the sensor. If a temperature sensor is reporting a reading of 1766.0, it is likely that the sensor is either destroyed or has become disconnected, as this is what the calculated reading returns when nothing is attached to the digital input pin. The DHT11 sensors are also fairly slow to respond to changes in temperature, so if you heat a sensor using your hand or another safe heating device, do not be surprised if it takes a bit of time for the temperature to return to room temperature. This is inherit in the design of the temperature sensors, so isn't something you can accelerate by changing anything in the software.
 
