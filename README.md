@@ -1,7 +1,8 @@
 # EC464: Greenhouse Project, 2018-2019
 A small-scale greenhouse that allows the user to view current sensor readings within the greenhouse from a web application and enables automatic heating if temperature values are too low. The device is intended to be used by casual gardeners who want to allow their plants to receive natural sunlight in the winter but whose plants will die or be severely damaged if left to completely withstand the elements alone. This device serves as an alternative to traditional greenhouses, which are often quite large and expensive to put together and are simply not realistic for casual gardeners. 
 
-This project was created for EC463/464 Senior Design for Electrical and Computer Engineers at Boston University in 2018-2019.
+This project was created for EC463/464 Senior Design for Electrical and Computer Engineers at Boston University in 2018-2019.  
+Customer: Ned Utzig, ned@utzig.com
 
 #### Team Members:
 Olivia Dorencz  
@@ -18,8 +19,10 @@ Qian Zhang
   a. [Reconfiguring Wifi](#wifi)  
     1. [Reconfiguring NodeMCU](#mcu)  
     2. [Reconfiguring Wemo Smart Plug](#smart)  
- 3. [Moving the Greenhouse](#move)  
-3. [Further Improvements](#imp)
+3. [Moving the Greenhouse](#move)
+4. [AWS Lambda Tips](#lambda)
+5. [Further Improvements](#imp)
+
 <a name = "status"></a>
 ## Current Project Status 
 The current project status consists of a working prototype which meets the following requirements:
@@ -84,10 +87,16 @@ I found it easiest to put my phone in Airplane mode and disable auto-reconnect o
 Your Wemo smart plug should now be connected to the Wifi network of your choosing!
 
 <a name = "move"></a>
-### Moving the Greenhouse 
+## Moving the Greenhouse 
 The greenhouse is fairly easy to move. It is not very heavy, but we have added wheels to make it easier to transport. The greenhouse can only be rolled back and forth along one axis, so make sure to move it carefully. To date, we have not yet cemented the structure to the base of the greenhouse. This is because we discovered that it can be a tight fit getting the greenhouse through doorways. If you are moving the greenhouse, make sure that the doorways the greenhouse will need to pass through are large enough to accomodate it. At this time, the structure can still be removed in case we need to deal with any difficult to navigate doorways on ECE day. 
 
 Unplug the greenhouse from any wall sockets before attempting to move the greenhouse. You should also attempt to hold the extension cord above the ground while moving the greenhouse to prevent any damage to the cord. Once you have moved the greenhouse to its new location, ensure that all electronics are still properly attached. This includes individual sensors, the serial connection between the NodeMCU and the Arduino, and the actual connections into the extension cord. Once this has all been verified, you can safely plug the greenhouse back in.
+
+<a name = "aws"></a>
+## AWS Lambda Tips
+We used AWS Lambda to extract the readings from AWS IoT Core, send them to AWS DynamoDB, and trigger any other actions like activating the heater or sending an email notification. Within AWS Lambda, we send HTTPS requests using the requests library of Node.js. Using outside libraries in AWS Lambda can be a little bit confusing if you're using the online text editor. We would recommend not using the online text editor and actually just editing all your files locally. You can then compress everything into a zip archive and upload it to AWS Lambda. One complication with this is if you have a Mac, the compression tool will automatically add another directory at the top level of the compressed archive. One way around this is to simply have somebody who does not have a Mac compress the archive and upload it. That is largely what we did throughout the course of this project. There are likely other workarounds to this issue, but would have to be discovered by someone who uses a Mac. 
+
+To use our AWS Lambda code as-is, zip the contents of [this directory](Software/Lambda_smartplug) and upload to AWS Lambda. This will preserve all of our functionality, but the "exports.js" file within that directory must be modified if you would like to add functionality to this.
 
 <a name = "imp"></a>
 ## Further Improvements
