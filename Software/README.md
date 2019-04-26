@@ -1,12 +1,19 @@
 # Software Report
 ## Table of Content
-[1. Overview of software module](#Overview_of_software_module) 
+[1. Overview of software module](#Overview_of_software_module)
+
 [2. Flow chart](#Flow_chart) 
+
 [3. Dev/build tool information](#Dev_build_tool_information)
+
 [4. Install the project software stack](#Install_the_project_software_stack)  
+
 <a name = "Overview_of_software_modul"></a>
 ## Overview of software module
 ### Arduino and NodeMCU Embedded System:
+[4. Arduino and NodeMCU Embedded System](Arduino and NodeMCU Embedded System) 
+
+
 Two microcontrollers are used to read current measurements and send these measurements to the DynamoDB database over a wifi connection. The first microcontroller is an Arduino Genuino Uno. All sensors are directly connected to the Arduino using digital and analog connections depending on the sensors requirements. The Arduino packs all of these readings into a single string which it sends to the NodeMCU over a Serial UART connection every 5 seconds. 
 
 Upon setup, the NodeMCU connects to the provided wifi network. It then attempts to connect to AWS IoT Core using MQTT. If either of these connections fails, the board will attempt to reconnect until successful. The NodeMCU receives the string from the Arduino, parses it, and then sends the measurements to AWS IoT Core over the user’s wifi connection. The Arduino does not at any point read data sent by the NodeMCU, though the NodeMCU does print some information over a Serial connection for debugging purposes. 
