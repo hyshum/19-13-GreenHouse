@@ -5,7 +5,7 @@ The hardware portion of this project can be broken down into three core sections
 * Sensor circuitry
 
 ### Bill of Materials:
-For items purchased online, a link is provided to connect you to corresponding webpage.
+_For items purchased online, a link is provided to connect you to corresponding webpage._
 
 Item | Cost per Item | Quantity | Number Included in Package | Total Cost |
 ---- | ------------- | -------- | -------------------------- | ---------- |
@@ -37,6 +37,8 @@ Wemo Mini Smart Plug | $16.89 | 1 | 1 | $16.89
 Solid Core Wire (1ft.) | $0.29 | 1 | 25 | $7.99
 
 ### Vendor Information:
+_All hyperlinks will direct you to that vendor's information page if you're interested in learning more about the company._
+
 Vendor Info | Item(s)
 ----------- | -----------
 [The Home Depot](https://corporate.homedepot.com/about) | <ul><li>PVC Pipe:</li><li>[Genova](https://www.genovaproducts.com/index.html) Schedule 40 Pressure Pipe, 1-1/2 in. x 10 ft., Plain End</li><ul><li>PVC Joints: </li><ul><li>90 Degree Elbow</li><li>45 Degree Elbow</li></ul></ul><li>BC Plywood</li><li>Continuous Hinge</li><li>Corner Brace</li><li>Corner Bracket</li><li>Door Handle</li><li>Everbilt Wood Screws</li><li>Cedar Lumbar</li><li>Pine Furring Strips</li></ul>
