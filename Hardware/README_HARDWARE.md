@@ -60,5 +60,6 @@ Datasheets for the electronics used are listed below:
 * [NSL19M51 Photoresistor](https://lunainc.com/wp-content/uploads/2016/06/NSL-19M51.pdf)
 * [Wemo Mini Smart Plug](https://www.belkin.com/us/support-article?articleNum=226110)
 * [Ardunio Genuino Uno](https://www.farnell.com/datasheets/1682209.pdf)
+* [NodeMCU (ESP8266)](https://einstronic.com/wp-content/uploads/2017/06/NodeMCU-ESP8266-ESP-12E-Catalogue.pdf)
 
 All of the diagrams pertaining to the electronics involved in the greenhouse are placed in the [Sensor-Circuitry](Sensor-Circuitry) folder.
