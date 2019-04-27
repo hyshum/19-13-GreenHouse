@@ -5,6 +5,8 @@ The hardware portion of this project can be broken down into three core sections
 * Sensor circuitry
 
 ### Bill of Materials:
+For items purchased online, a link is provided to connect you to corresponding webpage.
+
 Item | Cost per Item | Quantity | Number Included in Package | Total Cost |
 ---- | ------------- | -------- | -------------------------- | ---------- |
 PVC Pipe | $5.13 | 4 | 1 | $20.52
