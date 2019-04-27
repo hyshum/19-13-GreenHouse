@@ -54,3 +54,11 @@ The internal structure of EcoHome is composed of the following: a sub-floor, fou
 The heating pad consists of a plywood base and five equally spaced, pine furring strips with an incandescent rope light looped between them. Four evenly spaced sets of corner brackets are fastened to the outermost furring strips. Each set of brackets are separated by a 9/16in. space, allowing the plywood supports to fit snugly between them. Since the brackets are not attached to the supports, they can be removed with a pull if maintenance needs to be done to the rope light. All of the sketches and photographs pertaining to the internal structure of the greenhouse are placed in the [Internal-Structure](Internal-Structure) folder.
 
 ## Sensor Circuitry
+Datasheets for the electronics used are listed below:
+* [DHT11 Temperature and Humidity Module](https://www.mouser.com/ds/2/758/DHT11-Technical-Data-Sheet-Translated-Version-1143054.pdf)
+* [QLOUNI Soil Moisture Sensor](https://randomnerdtutorials.com/guide-for-soil-moisture-sensor-yl-69-or-hl-69-with-the-arduino/)
+* [NSL19M51 Photoresistor](https://lunainc.com/wp-content/uploads/2016/06/NSL-19M51.pdf)
+* [Wemo Mini Smart Plug](https://www.belkin.com/us/support-article?articleNum=226110)
+* [Ardunio Genuino Uno](https://www.farnell.com/datasheets/1682209.pdf)
+
+All of the diagrams pertaining to the electronics involved in the greenhouse are placed in the [Sensor-Circuitry](Sensor-Circuitry) folfer.
