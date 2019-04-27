@@ -4,6 +4,25 @@ The hardware portion of this project can be broken down into three core sections
 * Internal structure
 * Sensor circuitry
 
+## External Structure
+The external structure of the greenhouse is has two main components: the wooden base and the PVC pipe frame. The wooden base was created by screwing together treated cedar lumber boards to create the sides of the box. These were then screwed into one piece of plywood which created the floor of the box. To make transportation of the greenhouse easier, wheels were attached to the bottom to allow the greenhouse to be rolled. The next component, the PVC pipe frame, was constructed by cutting pieces of pipe to their specified lengths and multiple differnt joints were used to connect these pieces together. A primer was then used to prepare the pipe to be cemented together. To secure the frame to the base, plastic blocks were machined to create holes large enough to securely hold the frame in. These blocks were then attached to the base using a multi-surface epoxy. After the frame was securely in place in the base, the polyethylene plastic was attached to the frame using PVC pipe clamps. Two layers of plastic were attached to the frame, an inner and an outer layer, to create an air gap which acts as an insullation layer. The door of the greenhouse was created using two-adhesive zippers placed into a backwards L shape. When both zippers are unzipped, it creates a flap in the polyethylene that can be pulled out creating a door to the interior of the greenhouse. All of the sketches and photographs pertaining to the external structure of the greenhouse are placed in the [External-Structure](External-Structure) folder.
+
+## Internal Structure
+The internal structure of EcoHome is composed of the following: a sub-floor, four plywood supports for the sub-floor, and a heating pad. The sub-floor serves as the surface on which the plants will rest. Two pieces of plywood joined together by a continuous hinge comprise this component. To give the user easy access to the area beneath the floor, handles are found on the two sides of the plywood panels parallel to the continuous hinge. Currently, the power strip &ndash; EcoHome's main electricity provider &ndash; is located along the right cedar wall of the base. For quick maintenance, the user can raise one panel 90 degrees. However, if more exposure is needed of the area below the sub-floor, the user can lift both panels (which can collapse up to 30 degrees) and remove the component entirely.
+
+The heating pad consists of a plywood base and five equally spaced, pine furring strips with an incandescent rope light looped between them. Four evenly spaced sets of corner brackets are fastened to the outermost furring strips. Each set of brackets are separated by a 9/16in. space, allowing the plywood supports to fit snugly between them. Since the brackets are not attached to the supports, they can be removed with a pull if maintenance needs to be done to the rope light. All of the sketches and photographs pertaining to the internal structure of the greenhouse are placed in the [Internal-Structure](Internal-Structure) folder.
+
+## Sensor Circuitry
+Datasheets for the electronics used are listed below:
+* [DHT11 Temperature and Humidity Module](https://www.mouser.com/ds/2/758/DHT11-Technical-Data-Sheet-Translated-Version-1143054.pdf)
+* [QLOUNI Soil Moisture Sensor](https://randomnerdtutorials.com/guide-for-soil-moisture-sensor-yl-69-or-hl-69-with-the-arduino/)
+* [NSL19M51 Photoresistor](https://lunainc.com/wp-content/uploads/2016/06/NSL-19M51.pdf)
+* [Wemo Mini Smart Plug](https://www.belkin.com/us/support-article?articleNum=226110)
+* [Ardunio Genuino Uno](https://www.farnell.com/datasheets/1682209.pdf)
+* [NodeMCU (ESP8266)](https://einstronic.com/wp-content/uploads/2017/06/NodeMCU-ESP8266-ESP-12E-Catalogue.pdf)
+
+All of the diagrams pertaining to the electronics involved in the greenhouse are placed in the [Sensor-Circuitry](Sensor-Circuitry) folder.
+
 ### Bill of Materials:
 _For items purchased online, a link is provided to connect you to corresponding webpage._
 
@@ -43,23 +62,3 @@ Vendor Info | Item(s)
 ----------- | -----------
 [The Home Depot](https://corporate.homedepot.com/about) | <ul><li>PVC Pipe:</li><li>[Genova](https://www.genovaproducts.com/index.html) Schedule 40 Pressure Pipe, 1-1/2 in. x 10 ft., Plain End</li><ul><li>PVC Joints: </li><ul><li>90 Degree Elbow</li><li>45 Degree Elbow</li></ul></ul><li>BC Plywood</li><li>Continuous Hinge</li><li>Corner Brace</li><li>Corner Bracket</li><li>Door Handle</li><li>Everbilt Wood Screws</li><li>Cedar Lumbar</li><li>Pine Furring Strips</li></ul>
 [Amazon](https://www.aboutamazon.com/?utm_source=gateway&utm_medium=footer) | <ul><li>Arduino Genuino Uno</li><li>DHT11 Temperature and HUmidity Module</li><li>NodeMCU (ESP8266)</li><li>[Persik](https://persik.com/pages/about-us) Incadescent Rope Light</li><li>Wemo Mini Smart Plug</li><li>Adhesive Zipper</li><li>Polyethlene Film</li><li>Snap Clamps</li><li>PVC Joint: 4-Way Tree</li></ul>
-
-
-## External Structure
-The external structure of the greenhouse is has two main components: the wooden base and the PVC pipe frame. The wooden base was created by screwing together treated cedar lumber boards to create the sides of the box. These were then screwed into one piece of plywood which created the floor of the box. To make transportation of the greenhouse easier, wheels were attached to the bottom to allow the greenhouse to be rolled. The next component, the PVC pipe frame, was constructed by cutting pieces of pipe to their specified lengths and multiple differnt joints were used to connect these pieces together. A primer was then used to prepare the pipe to be cemented together. To secure the frame to the base, plastic blocks were machined to create holes large enough to securely hold the frame in. These blocks were then attached to the base using a multi-surface epoxy. After the frame was securely in place in the base, the polyethylene plastic was attached to the frame using PVC pipe clamps. Two layers of plastic were attached to the frame, an inner and an outer layer, to create an air gap which acts as an insullation layer. The door of the greenhouse was created using two-adhesive zippers placed into a backwards L shape. When both zippers are unzipped, it creates a flap in the polyethylene that can be pulled out creating a door to the interior of the greenhouse. All of the sketches and photographs pertaining to the external structure of the greenhouse are placed in the [External-Structure](External-Structure) folder.
-
-## Internal Structure
-The internal structure of EcoHome is composed of the following: a sub-floor, four plywood supports for the sub-floor, and a heating pad. The sub-floor serves as the surface on which the plants will rest. Two pieces of plywood joined together by a continuous hinge comprise this component. To give the user easy access to the area beneath the floor, handles are found on the two sides of the plywood panels parallel to the continuous hinge. Currently, the power strip &ndash; EcoHome's main electricity provider &ndash; is located along the right cedar wall of the base. For quick maintenance, the user can raise one panel 90 degrees. However, if more exposure is needed of the area below the sub-floor, the user can lift both panels (which can collapse up to 30 degrees) and remove the component entirely.
-
-The heating pad consists of a plywood base and five equally spaced, pine furring strips with an incandescent rope light looped between them. Four evenly spaced sets of corner brackets are fastened to the outermost furring strips. Each set of brackets are separated by a 9/16in. space, allowing the plywood supports to fit snugly between them. Since the brackets are not attached to the supports, they can be removed with a pull if maintenance needs to be done to the rope light. All of the sketches and photographs pertaining to the internal structure of the greenhouse are placed in the [Internal-Structure](Internal-Structure) folder.
-
-## Sensor Circuitry
-Datasheets for the electronics used are listed below:
-* [DHT11 Temperature and Humidity Module](https://www.mouser.com/ds/2/758/DHT11-Technical-Data-Sheet-Translated-Version-1143054.pdf)
-* [QLOUNI Soil Moisture Sensor](https://randomnerdtutorials.com/guide-for-soil-moisture-sensor-yl-69-or-hl-69-with-the-arduino/)
-* [NSL19M51 Photoresistor](https://lunainc.com/wp-content/uploads/2016/06/NSL-19M51.pdf)
-* [Wemo Mini Smart Plug](https://www.belkin.com/us/support-article?articleNum=226110)
-* [Ardunio Genuino Uno](https://www.farnell.com/datasheets/1682209.pdf)
-* [NodeMCU (ESP8266)](https://einstronic.com/wp-content/uploads/2017/06/NodeMCU-ESP8266-ESP-12E-Catalogue.pdf)
-
-All of the diagrams pertaining to the electronics involved in the greenhouse are placed in the [Sensor-Circuitry](Sensor-Circuitry) folder.
