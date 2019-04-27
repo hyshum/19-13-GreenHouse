@@ -61,7 +61,8 @@ Lambda turns on the heater is the temperature is too low, or turns off the heate
 
 <a name = "Dev_build_tool_information"></a>
 ## Dev/build tool information: Package name and version info. 
-For example, OpenCV 4.0.3  with Python 3.8.1, using CUDA Toolbox 10.0 and GCC 9.1 and CMake 3.14.2
+Python 3, Flask, Boto3 python client made by AWS, AWS client
+
 
 
 
