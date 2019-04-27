@@ -8,16 +8,16 @@ The hardware portion of this project can be broken down into three core sections
 Item | Cost per Item | Quantity | Number Included in Package | Total Cost |
 ---- | ------------- | -------- | -------------------------- | ---------- |
 PVC Pipe | $5.13 | 4 | 1 | $20.52
-PVC Joint: 90 Degree Elbow | $2.13 | 2 | 1 | $4.26
-PVC Joint: 45 Degree Elbow | $1.26 | 4 | 1 | $5.04
+[PVC Joint: 90 Degree Elbow](https://www.amazon.com/gp/product/B01LVUU8EX/ref=ppx_yo_dt_b_asin_title_o04_s00?ie=UTF8&th=1) | $2.13 | 2 | 1 | $4.26
+[PVC Joint: 45 Degree Elbow](https://www.homedepot.com/p/Charlotte-Pipe-1-1-2-in-PVC-Sch-40-45-Degree-S-x-S-Elbow-PVC023091400HD/203812169) | $1.26 | 4 | 1 | $5.04
 PVC Primer and Cement | $9.17 | 1 | 1 | $9.17
-PVC Joint: 4-Way Tree | $15.25 | 1 | 4 | $15.25
-Snap Clamps | $10.45 | 4 | 10 | $41.80
+[PVC Joint: 4-Way Tree](https://smile.amazon.com/gp/product/B072C2FBJJ/ref=ppx_od_dt_b_asin_title_o00_s00?ie=UTF8&psc=1) | $15.25 | 1 | 4 | $15.25
+[Snap Clamps](https://smile.amazon.com/gp/product/B00C7DPS2S/ref=ppx_od_dt_b_asin_title_o00_s01?ie=UTF8&psc=1) | $10.45 | 4 | 10 | $41.80
 Cedar Lumber: 2in. x 10in. x 12ft. | $18.77 | 1 | 1 | $18.77
 BC Plywood: 4ft. x 4ft. | $20.88 | 1 | 1 | $20.88
-Polyethlene Film: 12ft. x 25ft. | $57.94 | 1 | 1 | $57.94
+[Polyethlene Film:](https://smile.amazon.com/Greenhouse-Plastic-Polyethylene-Covering-Solution/dp/B00BM8HHKK/ref=smi_www_rco2_go_smi_5171374337?_encoding=UTF8&%2AVersion%2A=1&%2Aentries%2A=0&ie=UTF8) 12ft. x 25ft. | $57.94 | 1 | 1 | $57.94
 Adhesive Zipper | $17.99 | 1 | 1 | $17.99
-[Incandescent Rope Light](https://persik.com/collections/rope-lights/products/persik-18-feet-red-rope-light-for-indoor-and-outdoor-use-pack-of-2-total-36-feet-length) | $33.98 | 1 | 2 | $33.98
+Incandescent Rope Light | $33.98 | 1 | 2 | $33.98
 Continuous Hinge (30in.) | $7.47 | 1 | 1 | $7.47
 Corner Brace (2in.) | $2.56 | 3 | 4 | $7.68
 Corner Bracket | $7.48 | 1 | 20 | $7.48
@@ -27,9 +27,9 @@ BC Plywood: 1/2in. x 2ft. x 4ft. | $13.92 | 2 | 1 | $27.84
 Pine Furring Strip: 1in. x 2in. x 8ft. | $1.42 | 1 | 1 | $1.42
 Door Handle | $2.97 | 2 | 1 | $5.94
 Ardunio Genuino Uno | $22.00 | 1 | 1 | $22.00
-DHT11 Temperature and Humidity Module | $9.99 | 2 | 5 | $9.99
+[DHT11 Temperature and Humidity Module](https://www.amazon.com/HiLetgo-Temperature-Humidity-Arduino-Raspberry/dp/B01DKC2GQ0/ref=sr_1_3?ie=UTF8&qid=1539717887&sr=8-3&keywords=humidity+sensor+arduino) | $9.99 | 2 | 5 | $9.99
 NodeMCU (ESP8266) | $8.39 | 1 | 1 | $8.39
-QLOUNI Soil Moisture Sensor | $7.99 | 1 | 5 | $7.99
+[QLOUNI Soil Moisture Sensor](https://www.amazon.com/QLOUNI-Hygrometer-Humidity-Detection-Automatic/dp/B077F4WXX6/ref=sr_1_6?ie=UTF8&qid=1540932185&sr=8-6&keywords=arduino+soil+humidity+sensor) | $7.99 | 1 | 5 | $7.99
 NSL19M51 Photoresistor | $1.13 | 1 | 1 | $1.13
 Wemo Mini Smart Plug | $16.89 | 1 | 1 | $16.89
 Solid Core Wire (1ft.) | $0.29 | 1 | 25 | $7.99
