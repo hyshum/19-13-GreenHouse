@@ -15,7 +15,7 @@ PVC Primer and Cement | $9.17 | 1 | 1 | $9.17
 [Snap Clamps](https://smile.amazon.com/gp/product/B00C7DPS2S/ref=ppx_od_dt_b_asin_title_o00_s01?ie=UTF8&psc=1) | $10.45 | 4 | 10 | $41.80
 Cedar Lumber: 2in. x 10in. x 12ft. | $18.77 | 1 | 1 | $18.77
 BC Plywood: 4ft. x 4ft. | $20.88 | 1 | 1 | $20.88
-[Polyethlene Film:](https://smile.amazon.com/Greenhouse-Plastic-Polyethylene-Covering-Solution/dp/B00BM8HHKK/ref=smi_www_rco2_go_smi_5171374337?_encoding=UTF8&%2AVersion%2A=1&%2Aentries%2A=0&ie=UTF8) 12ft. x 25ft. | $57.94 | 1 | 1 | $57.94
+[Polyethlene Film: 12ft. x 25ft.](https://smile.amazon.com/Greenhouse-Plastic-Polyethylene-Covering-Solution/dp/B00BM8HHKK/ref=smi_www_rco2_go_smi_5171374337?_encoding=UTF8&%2AVersion%2A=1&%2Aentries%2A=0&ie=UTF8) | $57.94 | 1 | 1 | $57.94
 Adhesive Zipper | $17.99 | 1 | 1 | $17.99
 Incandescent Rope Light | $33.98 | 1 | 2 | $33.98
 Continuous Hinge (30in.) | $7.47 | 1 | 1 | $7.47
