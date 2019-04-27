@@ -40,7 +40,7 @@ Solid Core Wire (1ft.) | $0.29 | 1 | 25 | $7.99
 Vendor Info | Item(s)
 ----------- | -----------
 [Persik](https://persik.com/pages/about-us) | Incandescent Rope Light (18ft.)
-[The Home Depot](https://corporate.homedepot.com/about) | <ul><li>PVC Pipe:</li><li>[Genova](https://www.genovaproducts.com/index.html) Schedule 40 Pressure Pipe, 1-1/2 in. x 10 ft., Plain End</li><ul><li>PVC Joints: </li><ul><li>90 Degree Elbow</li><li>45 Degree Elbow</li></ul><li>Genova Schedule 40 Pressure Pipe, 1-1/2 in. x 10 ft., Plain End</li></ul><li>BC Plywood</li><li>Continuous Hinge</li><li>Corner Brace</li><li>Corner Bracket</li><li>Door Handle</li><li>Everbilt Wood Screws</li><li>Cedar Lumbar</li></ul>
+[The Home Depot](https://corporate.homedepot.com/about) | <ul><li>PVC Pipe:</li><li>[Genova](https://www.genovaproducts.com/index.html) Schedule 40 Pressure Pipe, 1-1/2 in. x 10 ft., Plain End</li><ul><li>PVC Joints: </li><ul><li>90 Degree Elbow</li><li>45 Degree Elbow</li></ul></ul><li>BC Plywood</li><li>Continuous Hinge</li><li>Corner Brace</li><li>Corner Bracket</li><li>Door Handle</li><li>Everbilt Wood Screws</li><li>Cedar Lumbar</li></ul>
 
 
 ## External Structure
