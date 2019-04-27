@@ -61,4 +61,4 @@ Datasheets for the electronics used are listed below:
 * [Wemo Mini Smart Plug](https://www.belkin.com/us/support-article?articleNum=226110)
 * [Ardunio Genuino Uno](https://www.farnell.com/datasheets/1682209.pdf)
 
-All of the diagrams pertaining to the electronics involved in the greenhouse are placed in the [Sensor-Circuitry](Sensor-Circuitry) folfer.
+All of the diagrams pertaining to the electronics involved in the greenhouse are placed in the [Sensor-Circuitry](Sensor-Circuitry) folder.
